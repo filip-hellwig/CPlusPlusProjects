@@ -1,0 +1,3 @@
+/home/filip/szkola/semestr4/pamsi/laby/struktury/build/CMakeFiles/rebuild_cache.dir
+/home/filip/szkola/semestr4/pamsi/laby/struktury/build/CMakeFiles/edit_cache.dir
+/home/filip/szkola/semestr4/pamsi/laby/struktury/build/CMakeFiles/test_data_structures.dir
