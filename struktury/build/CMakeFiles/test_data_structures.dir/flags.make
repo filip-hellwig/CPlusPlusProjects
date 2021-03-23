@@ -6,5 +6,5 @@ CXX_FLAGS = -g
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/filip/szkola/semestr4/pamsi/laby/struktury/include 
+CXX_INCLUDES = -I/home/filip/szkola/semestr4/pamsi/pamsi/struktury/include 
 

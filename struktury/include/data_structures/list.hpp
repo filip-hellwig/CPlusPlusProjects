@@ -33,7 +33,7 @@ class List
         }
     };
 
-    
+
 
     class Iterator
     {
@@ -44,7 +44,7 @@ class List
         using reference = const T&;
         using iterator_category = std::random_access_iterator_tag;
 
-        Iterator(Node* node = nullptr);
+        Iterator(std::shared_ptr<Node> newNode = nullptr);
 
         Iterator operator++();
         Iterator operator--();
@@ -55,8 +55,11 @@ class List
         difference_type operator-(const Iterator& other) const;
         Iterator operator+(difference_type diff) const;
         Iterator operator-(difference_type diff) const;
-        Iterator operator[](std::size_t i);
+        Iterator operator[](std::size_t index);
         T& operator*();
+        
+      private:
+        std::shared_ptr<Node> node_ptr = nullptr;
     };
 
     class ConstIterator
@@ -95,86 +98,150 @@ class List
 };
 
 template <typename T>
-List<T>::Iterator::Iterator(typename List<T>::Node* node)
+List<T>::Iterator::Iterator(std::shared_ptr<Node> newNode)
 {
+  node_ptr = newNode;
 }
 
 template <typename T>
 typename List<T>::Iterator List<T>::Iterator::operator++()
 {
   // TODO: implement
-  return Iterator();
+  return Iterator(node_ptr->fore_ptr);
 }
 
 template <typename T>
 typename List<T>::Iterator List<T>::Iterator::operator--()
 {
   // TODO: implement
-  return Iterator();
+  return Iterator(node_ptr->back_ptr);
 }
 
 template <typename T>
 bool List<T>::Iterator::operator==(const Iterator& other) const
 {
   // TODO: implement
-  return true;
+  return node_ptr == other.node_ptr;
 }
 
 template <typename T>
 bool List<T>::Iterator::operator!=(const Iterator& other) const
 {
   // TODO: implement
-  return true;
+  return node_ptr != other.node_ptr;
 }
 
 template <typename T>
 bool List<T>::Iterator::operator>(const Iterator& other) const
 {
-  // TODO: implement
+  Iterator iter(node_ptr);
+  for(int i=0; iter.node_ptr != nullptr; i++)
+  {
+    if(iter == other)
+    {
+      return false;
+    }
+    ++iter;
+  }
   return true;
 }
 
 template <typename T>
 bool List<T>::Iterator::operator<(const Iterator& other) const
 {
-  // TODO: implement
-  return true;
+  Iterator iter(node_ptr);
+  for(int i=0; iter.node_ptr != nullptr; i++)
+  {
+    if(iter == other)
+    {
+      return true;
+    }
+    ++iter;
+  }
+  return false;
 }
 
 template <typename T>
 typename List<T>::Iterator::difference_type List<T>::Iterator::operator-(const Iterator& other) const
 {
-  // TODO: implement
-  return 0;
+  if(*this == other)
+  {
+    return 0;
+  } else
+  {
+    int diff_value = 0;
+    Iterator iter(node_ptr);
+
+    while(iter != other)
+    {
+      if(*this > other)
+      {
+        --iter;
+        /* diff_value--; */
+        diff_value++;
+      } else
+      {
+        ++iter;
+        /* diff_value++; */
+        diff_value--;
+      }
+    }
+    return diff_value;
+  }
 }
 
 template <typename T>
 typename List<T>::Iterator List<T>::Iterator::operator+(difference_type diff) const
 {
-  // TODO: implement
-  return Iterator();
+  Iterator iter(node_ptr);
+  for(int i=0; i < diff; i++)
+  {
+    ++iter;
+  }
+  return Iterator(iter.node_ptr);
 }
 
 template <typename T>
 typename List<T>::Iterator List<T>::Iterator::operator-(difference_type diff) const
 {
-  // TODO: implement
-  return Iterator();
+  Iterator iter(node_ptr);
+  for(int i=0; i < diff; i++)
+  {
+    --iter;
+  }
+  return Iterator(iter.node_ptr);
 }
 
 template <typename T>
-typename List<T>::Iterator List<T>::Iterator::operator[](std::size_t i)
+typename List<T>::Iterator List<T>::Iterator::operator[](std::size_t index)
 {
-  // TODO: implement
-  return Iterator();
+  Iterator iter(node_ptr);
+
+  if(index == 0)
+  {
+    return Iterator(iter.node_ptr);
+  } else if(index > 0)
+  {
+    for(int i=0; i < index; i++)
+    {
+      ++iter;
+    }
+    return Iterator(iter.node_ptr);
+  } else
+  {
+    for(int i=0; i > index; i--)
+    {
+      --iter;
+    }
+    return Iterator(iter.node_ptr);
+  }
 }
 
 template <typename T>
 T& List<T>::Iterator::operator*()
 {
-    // TODO: implement
     static T element;
-    return element;
+    return element = node_ptr->data;
 }
 
 
@@ -404,15 +471,13 @@ void List<T>::remove(const T& element)
 template <typename T>
 typename List<T>::Iterator List<T>::begin()
 {
-    // TODO: implement
-    return Iterator();
+  return Iterator(head);
 }
 
 template <typename T>
 typename List<T>::Iterator List<T>::end()
 {
-    // TODO: implement
-    return Iterator();
+    return Iterator(nullptr);
 }
 
 template <typename T>

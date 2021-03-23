@@ -20,6 +20,7 @@ class PriorityQueue
         int data;
         int priority;
         std::shared_ptr<Node> fore_ptr;
+        std::shared_ptr<Node> back_ptr;
 
         std::shared_ptr<Node> newNode(T x, int p)
         {
@@ -27,6 +28,7 @@ class PriorityQueue
           N->data = x;
           N->priority = p;
           N->fore_ptr = nullptr;
+          N->back_ptr = nullptr; 
           return N;
         }
     };
@@ -52,21 +54,25 @@ void PriorityQueue<T>::enqueue(const T& newElement, int prio)
       
     for(int i = 0; i < num_nodes-1 && temp_ptr->priority <= search_ptr->priority; i++)
     {
-      search_ptr = search_ptr->fore_ptr;
+      search_ptr = search_ptr->fore_ptr; 
       iter_num++;
     }
     
     if (iter_num == num_nodes-1 && temp_ptr->priority <= search_ptr->priority)
     {
       search_ptr->fore_ptr = temp_ptr;
+      temp_ptr->back_ptr = search_ptr;
     } else if (iter_num == 0)
     {
+      head->back_ptr = temp_ptr;
       temp_ptr->fore_ptr = head;
       head = temp_ptr;
     } else
     {
-      temp_ptr->fore_ptr = search_ptr->fore_ptr;
-      search_ptr->fore_ptr = temp_ptr;
+      temp_ptr->fore_ptr = search_ptr;
+      temp_ptr->back_ptr = search_ptr->back_ptr;
+      search_ptr->back_ptr = temp_ptr;
+      temp_ptr->back_ptr->fore_ptr = temp_ptr;
     }
     search_ptr = nullptr;
   }

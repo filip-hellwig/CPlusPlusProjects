@@ -604,17 +604,17 @@ memory
 iostream
 -
 
-/home/filip/szkola/semestr4/pamsi/laby/struktury/src/test_data_structures.cpp
+/home/filip/szkola/semestr4/pamsi/pamsi/struktury/src/test_data_structures.cpp
 catch2/catch.hpp
-/home/filip/szkola/semestr4/pamsi/laby/struktury/src/catch2/catch.hpp
+/home/filip/szkola/semestr4/pamsi/pamsi/struktury/src/catch2/catch.hpp
 data_structures/list.hpp
-/home/filip/szkola/semestr4/pamsi/laby/struktury/src/data_structures/list.hpp
+/home/filip/szkola/semestr4/pamsi/pamsi/struktury/src/data_structures/list.hpp
 data_structures/map.hpp
-/home/filip/szkola/semestr4/pamsi/laby/struktury/src/data_structures/map.hpp
+/home/filip/szkola/semestr4/pamsi/pamsi/struktury/src/data_structures/map.hpp
 data_structures/priority_queue.hpp
-/home/filip/szkola/semestr4/pamsi/laby/struktury/src/data_structures/priority_queue.hpp
+/home/filip/szkola/semestr4/pamsi/pamsi/struktury/src/data_structures/priority_queue.hpp
 data_structures/queue.hpp
-/home/filip/szkola/semestr4/pamsi/laby/struktury/src/data_structures/queue.hpp
+/home/filip/szkola/semestr4/pamsi/pamsi/struktury/src/data_structures/queue.hpp
 data_structures/stack.hpp
-/home/filip/szkola/semestr4/pamsi/laby/struktury/src/data_structures/stack.hpp
+/home/filip/szkola/semestr4/pamsi/pamsi/struktury/src/data_structures/stack.hpp
 

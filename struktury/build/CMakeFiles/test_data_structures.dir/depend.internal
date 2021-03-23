@@ -8,7 +8,7 @@ CMakeFiles/test_data_structures.dir/src/test_data_structures.cpp.o
  ../include/data_structures/priority_queue.hpp
  ../include/data_structures/queue.hpp
  ../include/data_structures/stack.hpp
- /home/filip/szkola/semestr4/pamsi/laby/struktury/src/test_data_structures.cpp
+ /home/filip/szkola/semestr4/pamsi/pamsi/struktury/src/test_data_structures.cpp
 CMakeFiles/test_data_structures.dir/src/test_stl_data_structures.cpp.o
  ../include/catch2/catch.hpp
- /home/filip/szkola/semestr4/pamsi/laby/struktury/src/test_stl_data_structures.cpp
+ /home/filip/szkola/semestr4/pamsi/pamsi/struktury/src/test_stl_data_structures.cpp

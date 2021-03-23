@@ -4,8 +4,8 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/filip/szkola/semestr4/pamsi/laby/struktury/src/test_data_structures.cpp" "/home/filip/szkola/semestr4/pamsi/laby/struktury/cmake-build-debug/CMakeFiles/test_data_structures.dir/src/test_data_structures.cpp.o"
-  "/home/filip/szkola/semestr4/pamsi/laby/struktury/src/test_stl_data_structures.cpp" "/home/filip/szkola/semestr4/pamsi/laby/struktury/cmake-build-debug/CMakeFiles/test_data_structures.dir/src/test_stl_data_structures.cpp.o"
+  "/home/filip/szkola/semestr4/pamsi/pamsi/struktury/src/test_data_structures.cpp" "/home/filip/szkola/semestr4/pamsi/pamsi/struktury/cmake-build-debug/CMakeFiles/test_data_structures.dir/src/test_data_structures.cpp.o"
+  "/home/filip/szkola/semestr4/pamsi/pamsi/struktury/src/test_stl_data_structures.cpp" "/home/filip/szkola/semestr4/pamsi/pamsi/struktury/cmake-build-debug/CMakeFiles/test_data_structures.dir/src/test_stl_data_structures.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

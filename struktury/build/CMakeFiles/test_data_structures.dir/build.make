@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/filip/szkola/semestr4/pamsi/laby/struktury
+CMAKE_SOURCE_DIR = /home/filip/szkola/semestr4/pamsi/pamsi/struktury
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/filip/szkola/semestr4/pamsi/laby/struktury/build
+CMAKE_BINARY_DIR = /home/filip/szkola/semestr4/pamsi/pamsi/struktury/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/test_data_structures.dir/depend.make
@@ -59,29 +59,29 @@ include CMakeFiles/test_data_structures.dir/flags.make
 
 CMakeFiles/test_data_structures.dir/src/test_data_structures.cpp.o: CMakeFiles/test_data_structures.dir/flags.make
 CMakeFiles/test_data_structures.dir/src/test_data_structures.cpp.o: ../src/test_data_structures.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/filip/szkola/semestr4/pamsi/laby/struktury/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/test_data_structures.dir/src/test_data_structures.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/test_data_structures.dir/src/test_data_structures.cpp.o -c /home/filip/szkola/semestr4/pamsi/laby/struktury/src/test_data_structures.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/filip/szkola/semestr4/pamsi/pamsi/struktury/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/test_data_structures.dir/src/test_data_structures.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/test_data_structures.dir/src/test_data_structures.cpp.o -c /home/filip/szkola/semestr4/pamsi/pamsi/struktury/src/test_data_structures.cpp
 
 CMakeFiles/test_data_structures.dir/src/test_data_structures.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/test_data_structures.dir/src/test_data_structures.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/filip/szkola/semestr4/pamsi/laby/struktury/src/test_data_structures.cpp > CMakeFiles/test_data_structures.dir/src/test_data_structures.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/filip/szkola/semestr4/pamsi/pamsi/struktury/src/test_data_structures.cpp > CMakeFiles/test_data_structures.dir/src/test_data_structures.cpp.i
 
 CMakeFiles/test_data_structures.dir/src/test_data_structures.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/test_data_structures.dir/src/test_data_structures.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/filip/szkola/semestr4/pamsi/laby/struktury/src/test_data_structures.cpp -o CMakeFiles/test_data_structures.dir/src/test_data_structures.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/filip/szkola/semestr4/pamsi/pamsi/struktury/src/test_data_structures.cpp -o CMakeFiles/test_data_structures.dir/src/test_data_structures.cpp.s
 
 CMakeFiles/test_data_structures.dir/src/test_stl_data_structures.cpp.o: CMakeFiles/test_data_structures.dir/flags.make
 CMakeFiles/test_data_structures.dir/src/test_stl_data_structures.cpp.o: ../src/test_stl_data_structures.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/filip/szkola/semestr4/pamsi/laby/struktury/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/test_data_structures.dir/src/test_stl_data_structures.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/test_data_structures.dir/src/test_stl_data_structures.cpp.o -c /home/filip/szkola/semestr4/pamsi/laby/struktury/src/test_stl_data_structures.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/filip/szkola/semestr4/pamsi/pamsi/struktury/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/test_data_structures.dir/src/test_stl_data_structures.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/test_data_structures.dir/src/test_stl_data_structures.cpp.o -c /home/filip/szkola/semestr4/pamsi/pamsi/struktury/src/test_stl_data_structures.cpp
 
 CMakeFiles/test_data_structures.dir/src/test_stl_data_structures.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/test_data_structures.dir/src/test_stl_data_structures.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/filip/szkola/semestr4/pamsi/laby/struktury/src/test_stl_data_structures.cpp > CMakeFiles/test_data_structures.dir/src/test_stl_data_structures.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/filip/szkola/semestr4/pamsi/pamsi/struktury/src/test_stl_data_structures.cpp > CMakeFiles/test_data_structures.dir/src/test_stl_data_structures.cpp.i
 
 CMakeFiles/test_data_structures.dir/src/test_stl_data_structures.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/test_data_structures.dir/src/test_stl_data_structures.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/filip/szkola/semestr4/pamsi/laby/struktury/src/test_stl_data_structures.cpp -o CMakeFiles/test_data_structures.dir/src/test_stl_data_structures.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/filip/szkola/semestr4/pamsi/pamsi/struktury/src/test_stl_data_structures.cpp -o CMakeFiles/test_data_structures.dir/src/test_stl_data_structures.cpp.s
 
 # Object files for target test_data_structures
 test_data_structures_OBJECTS = \
@@ -95,7 +95,7 @@ test_data_structures: CMakeFiles/test_data_structures.dir/src/test_data_structur
 test_data_structures: CMakeFiles/test_data_structures.dir/src/test_stl_data_structures.cpp.o
 test_data_structures: CMakeFiles/test_data_structures.dir/build.make
 test_data_structures: CMakeFiles/test_data_structures.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/filip/szkola/semestr4/pamsi/laby/struktury/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable test_data_structures"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/filip/szkola/semestr4/pamsi/pamsi/struktury/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable test_data_structures"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/test_data_structures.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -108,6 +108,6 @@ CMakeFiles/test_data_structures.dir/clean:
 .PHONY : CMakeFiles/test_data_structures.dir/clean
 
 CMakeFiles/test_data_structures.dir/depend:
-	cd /home/filip/szkola/semestr4/pamsi/laby/struktury/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/filip/szkola/semestr4/pamsi/laby/struktury /home/filip/szkola/semestr4/pamsi/laby/struktury /home/filip/szkola/semestr4/pamsi/laby/struktury/build /home/filip/szkola/semestr4/pamsi/laby/struktury/build /home/filip/szkola/semestr4/pamsi/laby/struktury/build/CMakeFiles/test_data_structures.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/filip/szkola/semestr4/pamsi/pamsi/struktury/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/filip/szkola/semestr4/pamsi/pamsi/struktury /home/filip/szkola/semestr4/pamsi/pamsi/struktury /home/filip/szkola/semestr4/pamsi/pamsi/struktury/build /home/filip/szkola/semestr4/pamsi/pamsi/struktury/build /home/filip/szkola/semestr4/pamsi/pamsi/struktury/build/CMakeFiles/test_data_structures.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/test_data_structures.dir/depend
 

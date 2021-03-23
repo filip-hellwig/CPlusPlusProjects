@@ -1,4 +1,4 @@
-# Install script for directory: /home/filip/szkola/semestr4/pamsi/laby/struktury
+# Install script for directory: /home/filip/szkola/semestr4/pamsi/pamsi/struktury
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/filip/szkola/semestr4/pamsi/laby/struktury/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/filip/szkola/semestr4/pamsi/pamsi/struktury/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
