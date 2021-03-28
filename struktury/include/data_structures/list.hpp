@@ -71,7 +71,7 @@ class List
       using reference = const T&;
       using iterator_category = std::random_access_iterator_tag;
 
-      ConstIterator(Node* node = nullptr);
+      ConstIterator(std::shared_ptr<Node> newNode = nullptr);
 
       ConstIterator operator++();
       ConstIterator operator--();
@@ -82,8 +82,11 @@ class List
       difference_type operator-(const ConstIterator& other) const;
       ConstIterator operator+(difference_type diff) const;
       ConstIterator operator-(difference_type diff) const;
-      ConstIterator operator[](std::size_t i);
+      ConstIterator operator[](std::size_t index);
       const T& operator*();
+
+    private:
+      std::shared_ptr<Node> node_ptr = nullptr;
     };
 
     void pushBack(const T& newElement);
@@ -106,15 +109,15 @@ List<T>::Iterator::Iterator(std::shared_ptr<Node> newNode)
 template <typename T>
 typename List<T>::Iterator List<T>::Iterator::operator++()
 {
-  // TODO: implement
-  return Iterator(node_ptr->fore_ptr);
+  node_ptr = node_ptr->fore_ptr;
+  return *this;
 }
 
 template <typename T>
 typename List<T>::Iterator List<T>::Iterator::operator--()
 {
-  // TODO: implement
-  return Iterator(node_ptr->back_ptr);
+  node_ptr = node_ptr->back_ptr;
+  return *this;
 }
 
 template <typename T>
@@ -164,30 +167,17 @@ bool List<T>::Iterator::operator<(const Iterator& other) const
 template <typename T>
 typename List<T>::Iterator::difference_type List<T>::Iterator::operator-(const Iterator& other) const
 {
-  if(*this == other)
-  {
-    return 0;
-  } else
-  {
-    int diff_value = 0;
-    Iterator iter(node_ptr);
+  int diff_value = 0;
 
-    while(iter != other)
-    {
-      if(*this > other)
-      {
-        --iter;
-        /* diff_value--; */
-        diff_value++;
-      } else
-      {
-        ++iter;
-        /* diff_value++; */
-        diff_value--;
-      }
-    }
-    return diff_value;
+  Iterator iter{*this > other ? other.node_ptr : node_ptr};
+  Iterator iterEnd{*this > other ? node_ptr : other.node_ptr};
+
+  for(; iter != iterEnd; diff_value++, ++iter)
+  {
   }
+
+  return diff_value;
+  
 }
 
 template <typename T>
@@ -249,86 +239,134 @@ T& List<T>::Iterator::operator*()
 
 
 template <typename T>
-List<T>::ConstIterator::ConstIterator(typename List<T>::Node* node)
+List<T>::ConstIterator::ConstIterator(std::shared_ptr<Node> newNode)
 {
+  node_ptr = newNode;
 }
 
 template <typename T>
 typename List<T>::ConstIterator List<T>::ConstIterator::operator++()
 {
-  // TODO: implement
-  return ConstIterator();
+  node_ptr = node_ptr->fore_ptr;
+  return *this;
 }
 
 template <typename T>
 typename List<T>::ConstIterator List<T>::ConstIterator::operator--()
 {
-  // TODO: implement
-  return ConstIterator();
+  node_ptr = node_ptr->back_ptr;
+  return *this;
 }
 
 template <typename T>
 bool List<T>::ConstIterator::operator==(const ConstIterator& other) const
 {
-  // TODO: implement
-  return true;
+  return node_ptr == other.node_ptr;
 }
 
 template <typename T>
 bool List<T>::ConstIterator::operator!=(const ConstIterator& other) const
 {
-  // TODO: implement
-  return true;
+  return node_ptr != other.node_ptr;
 }
 
 template <typename T>
 bool List<T>::ConstIterator::operator>(const ConstIterator& other) const
 {
-  // TODO: implement
+  ConstIterator iter(node_ptr);
+  for(int i=0; iter.node_ptr != nullptr; i++)
+  {
+    if(iter == other)
+    {
+      return false;
+    }
+    ++iter;
+  }
   return true;
 }
 
 template <typename T>
 bool List<T>::ConstIterator::operator<(const ConstIterator& other) const
 {
-  // TODO: implement
-  return true;
+  ConstIterator iter(node_ptr);
+  for(int i=0; iter.node_ptr != nullptr; i++)
+  {
+    if(iter == other)
+    {
+      return true;
+    }
+    ++iter;
+  }
+  return false;
 }
 
 template <typename T>
 typename List<T>::ConstIterator::difference_type List<T>::ConstIterator::operator-(const ConstIterator& other) const
 {
-  // TODO: implement
-  return 0;
+  int diff_value = 0;
+
+  ConstIterator iter{*this > other ? other.node_ptr : node_ptr};
+  ConstIterator iterEnd{*this > other ? node_ptr : other.node_ptr};
+
+  for(; iter != iterEnd; diff_value++, ++iter)
+  {
+  }
+
+  return diff_value;
 }
 
 template <typename T>
 typename List<T>::ConstIterator List<T>::ConstIterator::operator+(difference_type diff) const
 {
-  // TODO: implement
-  return Iterator();
+  ConstIterator iter(node_ptr);
+  for(int i=0; i < diff; i++)
+  {
+    ++iter;
+  }
+  return ConstIterator(iter.node_ptr);
 }
 
 template <typename T>
 typename List<T>::ConstIterator List<T>::ConstIterator::operator-(difference_type diff) const
 {
-  // TODO: implement
-  return ConstIterator();
+  ConstIterator iter(node_ptr);
+  for(int i=0; i < diff; i++)
+  {
+    --iter;
+  }
+  return ConstIterator(iter.node_ptr);
 }
 
 template <typename T>
-typename List<T>::ConstIterator List<T>::ConstIterator::operator[](std::size_t i)
+typename List<T>::ConstIterator List<T>::ConstIterator::operator[](std::size_t index)
 {
-  // TODO: implement
-  return Iterator();
+  ConstIterator iter(node_ptr);
+
+  if(index == 0)
+  {
+    return ConstIterator(iter.node_ptr);
+  } else if(index > 0)
+  {
+    for(int i=0; i < index; i++)
+    {
+      ++iter;
+    }
+    return ConstIterator(iter.node_ptr);
+  } else
+  {
+    for(int i=0; i > index; i--)
+    {
+      --iter;
+    }
+    return ConstIterator(iter.node_ptr);
+  }
 }
 
 template <typename T>
 const T& List<T>::ConstIterator::operator*()
 {
-    // TODO: implement
-    static T element;
-    return element;
+  static T element;
+  return element = node_ptr->data;
 }
 
 

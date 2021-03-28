@@ -86,7 +86,7 @@ TEST_CASE("List/iterator")
     List<int> list;
 
     list.pushBack(1);
-    list.pushBack(3);
+    list.pushBack(2);
     list.pushBack(3);
 
     std::sort(list.begin(), list.end());
