@@ -5,9 +5,9 @@ template <typename T>
 class PriorityQueue
 {
   public:
-    class Node;
-    std::shared_ptr<Node> head = nullptr;
-    int num_nodes;
+    class Node;     // deklarujemy klasę node
+    std::shared_ptr<Node> head = nullptr;     // wskaźnik na pierwszy element listy
+    int num_nodes;      // przechowuje informację o ilości elementów
 
     PriorityQueue()
     {
@@ -17,12 +17,12 @@ class PriorityQueue
     class Node
     {
       public:
-        int data;
-        int priority;
-        std::shared_ptr<Node> fore_ptr;
-        std::shared_ptr<Node> back_ptr;
+        int data;     // przechowuje dane
+        int priority;     // przechowuje wielkość priorytetu
+        std::shared_ptr<Node> fore_ptr;     // wskaźnik na kolejny element
+        std::shared_ptr<Node> back_ptr;     // wskaźnik na poprzedni element
 
-        std::shared_ptr<Node> newNode(T x, int p)
+        std::shared_ptr<Node> newNode(T x, int p)     // tworzymy nowy węzeł, zwracamy wskaźnik na niego
         {
           std::shared_ptr<Node> N = std::make_shared<Node>();
           N->data = x;
@@ -38,36 +38,39 @@ class PriorityQueue
 };
 
 
+// funkcja wstawiająca nowy element w odpowiednim miejscu kolejki. Elementy o najwyższym priorytecie są na początku,
+// elementy o niższym na końcu. Elementy są wstawiane według priorytetu.
 template <typename T>
 void PriorityQueue<T>::enqueue(const T& newElement, int prio)
 {
   Node node;
-  std::shared_ptr<Node> temp_ptr = node.newNode(newElement, prio);
-  if(head == nullptr)
+  std::shared_ptr<Node> temp_ptr = node.newNode(newElement, prio);      // wskaźnik na nowy węzeł
+  if(head == nullptr)       // sprawdzamy czy jest jakiś element w kolejce
   {
     head = temp_ptr;
   } else
   {
-    std::shared_ptr<Node> search_ptr(nullptr);
+    std::shared_ptr<Node> search_ptr(nullptr);      // wskaźnik służący do iterowania po kolejce
     search_ptr = head;
-    int iter_num = 0;
-      
-    for(int i = 0; i < num_nodes-1 && temp_ptr->priority <= search_ptr->priority; i++)
+    int iter_num = 0;     // liczy ilość iteracji
+
+    // szukamy odpowiedniego miejsca dla elementu (porównujemy proprytety, szukamy mniejszego)
+    for(int i = 0; i < num_nodes-1 && temp_ptr->priority <= search_ptr->priority; i++)      
     {
       search_ptr = search_ptr->fore_ptr; 
       iter_num++;
     }
     
-    if (iter_num == num_nodes-1 && temp_ptr->priority <= search_ptr->priority)
+    if (iter_num == num_nodes-1 && temp_ptr->priority <= search_ptr->priority)      // wstawiamy na koniec listy (koniec kolejki)
     {
       search_ptr->fore_ptr = temp_ptr;
       temp_ptr->back_ptr = search_ptr;
-    } else if (iter_num == 0)
+    } else if (iter_num == 0)     // wstawiemy na początek kolejki (element ma najwyższy priorytet)
     {
       head->back_ptr = temp_ptr;
       temp_ptr->fore_ptr = head;
       head = temp_ptr;
-    } else
+    } else      // wstawiamy w środek kolejki, w odpowiednie miejsce
     {
       temp_ptr->fore_ptr = search_ptr;
       temp_ptr->back_ptr = search_ptr->back_ptr;
@@ -81,11 +84,11 @@ void PriorityQueue<T>::enqueue(const T& newElement, int prio)
 }
 
 template <typename T>
-T PriorityQueue<T>::dequeue()
+T PriorityQueue<T>::dequeue()     // usuwamy element z początku kolejki
 {
   T dequeue_value;
 
-  if(head == nullptr)
+  if(head == nullptr)     // sprawdzamy czy kolejka jest pusta
   {
     std::cerr << "Queue is empty!\n";
     exit(1);

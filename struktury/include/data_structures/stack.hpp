@@ -6,18 +6,18 @@ template <typename T>
 class Stack
 {
   public:
-    class Node;
-    std::shared_ptr<Node> top = nullptr;
+    class Node;     // deklaracja klasy Node
+    std::shared_ptr<Node> top = nullptr;      // wskazuje na pierwszy element stosu
 
     class Node
     {
       public:
-        int data;
-        std::shared_ptr<Node> fore_ptr; 
+        int data;       // przechowuje dane
+        std::shared_ptr<Node> fore_ptr;       // wskaźnik na kolejny element
 
-        std::shared_ptr<Node> newNode(T x)
+        std::shared_ptr<Node> newNode(T x)      // tworzymy nowy węzeł, zwracamy wskaźnik na niego
         {
-          std::shared_ptr<Node> N = std::make_shared<Node>();
+          std::shared_ptr<Node> N = std::make_shared<Node>();   
           N->data = x;
           N->fore_ptr = nullptr;
           return N;
@@ -28,11 +28,11 @@ class Stack
 };
 
 template <typename T>
-void Stack<T>::push(const T& newElement)
+void Stack<T>::push(const T& newElement)        // dodajemy element na początek stosu
 {
   Node node;
   std::shared_ptr<Node> temp_ptr = node.newNode(newElement);
-  if(top == nullptr)
+  if(top == nullptr)      // sprawdzamy czy stos jest pusty
   {
     top = temp_ptr;
     return;
@@ -42,11 +42,11 @@ void Stack<T>::push(const T& newElement)
 }
 
 template <typename T>
-T Stack<T>::pop()
+T Stack<T>::pop()     // ściągamy element z kończa stosu
 {
   T pop_value;
 
-  if(top == nullptr)
+  if(top == nullptr)      // sprawdzamy czy stos nie jest pusty
   {
     std::cerr << "Stack is empty!\n";
     exit(1);

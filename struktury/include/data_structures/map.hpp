@@ -2,13 +2,22 @@
 #define MAP_HPP_
 
 
-int hash(const std::string& str)
+int hash(const std::string& str)      // funkcja haszująca, działa dla klucza typu string
 {
   int result = 0;
   for(int i=0; i < str.size(); i++)
   {
     result += static_cast<int>(str[i])*i;
   }
+
+  return result % 1000;
+}
+
+int hash(int key)      // funkcja haszująca, działa dla klucza typu int
+{
+  int result = 0;
+  
+  result = key * 38;
 
   return result % 1000;
 }
@@ -30,7 +39,7 @@ private:
 
 
 template <typename KeyType, typename ValueType>
-void Map<KeyType, ValueType>::insert(const KeyType& key, const ValueType& value)
+void Map<KeyType, ValueType>::insert(const KeyType& key, const ValueType& value)      // wstawiamy element do tablicy, według klucza
 {
   int index = hash(key);
   tab[index] = value;

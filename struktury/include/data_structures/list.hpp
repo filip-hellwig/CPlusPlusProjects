@@ -7,9 +7,9 @@ template <typename T>
 class List
 {
   public:
-    class Node;
-    std::shared_ptr<Node> head = nullptr;
-    int num_nodes;
+    class Node;     // deklaracja klasy node
+    std::shared_ptr<Node> head = nullptr;     // wskazuje na pierwszy element listy
+    int num_nodes;      // liczy ilość węzłów w liście
 
     List()
     {
@@ -19,11 +19,11 @@ class List
     class Node
     {
       public:
-        T data;
-        std::shared_ptr<Node> fore_ptr;
-        std::shared_ptr<Node> back_ptr;
+        T data;     // przechowuje dane
+        std::shared_ptr<Node> fore_ptr;     // wskaźnik na kolejny element
+        std::shared_ptr<Node> back_ptr;     // wskaźnik na poprzedni element
 
-        std::shared_ptr<Node> newNode(T x)
+        std::shared_ptr<Node> newNode(T x)      // tworzymy nowy węzeł, zwracamy wskaźnik na niego
         {
           std::shared_ptr<Node> N = std::make_shared<Node>();
           N->data = x;
@@ -123,14 +123,12 @@ typename List<T>::Iterator List<T>::Iterator::operator--()
 template <typename T>
 bool List<T>::Iterator::operator==(const Iterator& other) const
 {
-  // TODO: implement
   return node_ptr == other.node_ptr;
 }
 
 template <typename T>
 bool List<T>::Iterator::operator!=(const Iterator& other) const
 {
-  // TODO: implement
   return node_ptr != other.node_ptr;
 }
 
@@ -138,7 +136,7 @@ template <typename T>
 bool List<T>::Iterator::operator>(const Iterator& other) const
 {
   Iterator iter(node_ptr);
-  for(int i=0; iter.node_ptr != nullptr; i++)
+  for(int i=0; iter.node_ptr != nullptr; i++)     // ta pętla sprawdza czy węzeł other jest dalej w liście niż this
   {
     if(iter == other)
     {
@@ -153,7 +151,7 @@ template <typename T>
 bool List<T>::Iterator::operator<(const Iterator& other) const
 {
   Iterator iter(node_ptr);
-  for(int i=0; iter.node_ptr != nullptr; i++)
+  for(int i=0; iter.node_ptr != nullptr; i++)     // ta pętla sprawdza czy węzeł other jest dalej w liście niż this
   {
     if(iter == other)
     {
@@ -274,7 +272,7 @@ template <typename T>
 bool List<T>::ConstIterator::operator>(const ConstIterator& other) const
 {
   ConstIterator iter(node_ptr);
-  for(int i=0; iter.node_ptr != nullptr; i++)
+  for(int i=0; iter.node_ptr != nullptr; i++)     // ta pętla sprawdza czy węzeł other jest dalej w liście niż this
   {
     if(iter == other)
     {
@@ -289,7 +287,7 @@ template <typename T>
 bool List<T>::ConstIterator::operator<(const ConstIterator& other) const
 {
   ConstIterator iter(node_ptr);
-  for(int i=0; iter.node_ptr != nullptr; i++)
+  for(int i=0; iter.node_ptr != nullptr; i++)     // ta pętla sprawdza czy węzeł other jest dalej w liście niż this
   {
     if(iter == other)
     {
@@ -381,21 +379,21 @@ template <typename T>
 void List<T>::pushBack(const T& newElement)
 {
   Node node;
-  std::shared_ptr<Node> temp_ptr = node.newNode(newElement);
-  if(head == nullptr)
+  std::shared_ptr<Node> temp_ptr = node.newNode(newElement);      //wskaźnik na nowy węzeł
+  if(head == nullptr)     //sprawdzamy czy lista ma jakiś element
   {
     head = temp_ptr;
   } else
   {
-    std::shared_ptr<Node> search_ptr(nullptr);
+    std::shared_ptr<Node> search_ptr(nullptr);      // wskaźnik używany do szukania
     search_ptr = head;
       
-    while (search_ptr->fore_ptr != nullptr)
+    while (search_ptr->fore_ptr != nullptr)     // szukamy ostatniego węzła listy
     {
       search_ptr = search_ptr->fore_ptr;
     }
     
-    search_ptr->fore_ptr = temp_ptr;
+    search_ptr->fore_ptr = temp_ptr;      // wstawiamy nowy węzeł na końcu listy
     temp_ptr->back_ptr = search_ptr;
 
     search_ptr = nullptr;
@@ -408,14 +406,13 @@ template <typename T>
 void List<T>::pushFront(const T& newElement)
 {
   Node node;
-  std::shared_ptr<Node> temp_ptr = node.newNode(newElement);
-  if(head == nullptr)
+  std::shared_ptr<Node> temp_ptr = node.newNode(newElement);      // wskaźnik na nowy węzeł
+  if(head == nullptr)     //sprawdzamy czy lista ma jakiś element
   {
     head = temp_ptr;
-    num_nodes++;
   } else
   {
-    head->back_ptr = temp_ptr;
+    head->back_ptr = temp_ptr;      // dodajemy węzeł na początku listy
     temp_ptr->fore_ptr = head;
     head = temp_ptr;
   }
@@ -426,26 +423,26 @@ void List<T>::pushFront(const T& newElement)
 template <typename T>
 void List<T>::insert(const T& newElement, int index)
 {
-  if(index == 0)
+  if(index == 0)      // dodajemy na początku listy
   {
     pushFront(newElement);
-  } else if (index == num_nodes)
+  } else if (index == num_nodes)      // dodajemy na końcu listy
   {
     pushBack(newElement);
-  } else if (index < 0 || index > num_nodes)
+  } else if (index < 0 || index > num_nodes)      // sprawdzam, czy index jest dobry
   {
     std::cerr << "Index is inwalid!\n";
     exit(1);
   } else
   {
     Node node;
-    std::shared_ptr<Node> temp_ptr = node.newNode(newElement);
-    if(head == nullptr)
+    std::shared_ptr<Node> temp_ptr = node.newNode(newElement);      // wskaźnik na nowy węzeł
+    if(head == nullptr)     //sprawdzamy czy lista ma jakiś element
     {
       head = temp_ptr;
     } else
     {
-      std::shared_ptr<Node> search_ptr(nullptr);
+      std::shared_ptr<Node> search_ptr(nullptr);      // wskaźnik używany do szukania węzła index-1
       search_ptr = head;
         
       for(int i = 0; i < index-1; i++)
@@ -453,7 +450,7 @@ void List<T>::insert(const T& newElement, int index)
         search_ptr = search_ptr->fore_ptr;
       }
       
-      temp_ptr->back_ptr = search_ptr;
+      temp_ptr->back_ptr = search_ptr;      // wstawiamy nowy węzeł pomiędzy dwoma już istniejącymy
       temp_ptr->fore_ptr = search_ptr->fore_ptr;
       temp_ptr->fore_ptr->back_ptr = temp_ptr;
       search_ptr->fore_ptr = temp_ptr;
@@ -468,42 +465,47 @@ void List<T>::insert(const T& newElement, int index)
 template <typename T>
 void List<T>::remove(const T& element)
 {
-  std::shared_ptr<Node> search_ptr(nullptr);
-  search_ptr = head;
-  int iter_num = 0;
-  
-  for(int i = 0; i < num_nodes && search_ptr->data != element; i++)
-  {
-    search_ptr = search_ptr->fore_ptr;
-    iter_num++;
-  }
+  std::shared_ptr<Node> search_ptr(nullptr);      // wskaźnik szukający elementu do usunięcia
+  int finish = 0;     // flaga do kończenia usuwania
 
-  if(iter_num == 0)
+  while(finish != 1)      // dopóki flaga jest 0, szukamy wszystkich elementów do usunięcia
   {
-    head = search_ptr->fore_ptr;
-    search_ptr->fore_ptr->back_ptr = search_ptr->back_ptr;
-    search_ptr->back_ptr = nullptr;
-    search_ptr->fore_ptr = nullptr;
-    search_ptr = nullptr;
-  } else if (iter_num == num_nodes-1)
-  {
-    search_ptr->back_ptr->fore_ptr = search_ptr->fore_ptr;
-    search_ptr->back_ptr = nullptr;
-    search_ptr->fore_ptr = nullptr;
-    search_ptr = nullptr;
-  } else if (iter_num == num_nodes)
-  {
-    std::cerr << "This element does not exist!\n";
-    exit(1);
-  } else
-  {
-    search_ptr->back_ptr->fore_ptr = search_ptr->fore_ptr;
-    search_ptr->fore_ptr->back_ptr = search_ptr->back_ptr;
-    search_ptr->back_ptr = nullptr;
-    search_ptr->fore_ptr = nullptr;
-    search_ptr = nullptr;
+    search_ptr = head;
+    int iter_num = 0;     // sprawdza ile elementów przeszliśmy, pilnuje wyjścia za listę
+
+    for(int i = 0; i < num_nodes && search_ptr->data != element; i++)       // szukamy elementu, jeżeli w ogóle istnieje
+    {
+      search_ptr = search_ptr->fore_ptr;
+      iter_num++;
+    }
+
+    if(iter_num == 0)     // search w ogóle nie iterował, to usuwamy pierwszy element
+    {
+      head = search_ptr->fore_ptr;
+      search_ptr->fore_ptr->back_ptr = search_ptr->back_ptr;
+      search_ptr->back_ptr = nullptr;
+      search_ptr->fore_ptr = nullptr;
+      num_nodes--;
+    } else if (iter_num == num_nodes-1)     // jeżeli search iterował po całej liście, ale skończył, to usuwamy ostatni element
+    {
+      search_ptr->back_ptr->fore_ptr = search_ptr->fore_ptr;
+      search_ptr->back_ptr = nullptr;
+      search_ptr->fore_ptr = nullptr;
+      num_nodes--;
+    } else if (iter_num == num_nodes)     // jeżeli search interował po całej liście, ale się nie zatrzymał, to kończymy funkcję
+    {
+      finish = 1;     // flaga do zakończenia while-a
+      search_ptr = nullptr;
+      return;
+    } else      // jeżeli search iterował inną ilość razy, to usuwamy element ze środka listy
+    {
+      search_ptr->back_ptr->fore_ptr = search_ptr->fore_ptr;
+      search_ptr->fore_ptr->back_ptr = search_ptr->back_ptr;
+      search_ptr->back_ptr = nullptr;
+      search_ptr->fore_ptr = nullptr;
+      num_nodes--;
+    }
   }
-  num_nodes--;
 }
 
 template <typename T>
@@ -522,15 +524,13 @@ template <typename T>
 typename List<T>::ConstIterator List<T>::cbegin() const
 {
 
-    // TODO: implement
-    return ConstIterator();
+    return ConstIterator(head);
 }
 
 template <typename T>
 typename List<T>::ConstIterator List<T>::cend() const
 {
-    return ConstIterator();
-    // TODO: implement
+    return ConstIterator(nullptr);
 }
 
 template <typename T>
@@ -538,16 +538,16 @@ T& List<T>::operator[](int index)
 {
   static T element;
 
-  if(index < 0 || index >= num_nodes)
+  if(index < 0 || index >= num_nodes)     // sprawdzamy czy taki element istnieje
   {
     std::cerr << "This index is invalid!\n";
     exit(1);
   }
 
-  std::shared_ptr<Node> temp_ptr(nullptr);
+  std::shared_ptr<Node> temp_ptr(nullptr);      // wskaźnik służy do szukania elementu
   temp_ptr = head;
 
-  for(int i = 0; i < index; i++)
+  for(int i = 0; i < index; i++)      // iterujemy aż do znalezienia elementu
   {
     temp_ptr = temp_ptr->fore_ptr;
   }
