@@ -10,19 +10,19 @@ using namespace std::chrono_literals;
 
 int main(int argc, char* argv[])
 {
-    std::vector<int> tab(100000);
+    std::vector<int> tab(10000);
 
-    /* srand((unsigned) time(0));
+    srand((unsigned) time(0));
 
-    for(int i = 0; i < tab.size(); i++)
+    for(int i = 0; i < tab.size(); i++)         // Tworzenie losowych zbiorów danych
     {
         tab[i] = (rand() % 100) + 1;
-    } */
+    }
 
-    for(int i = 0; i < tab.size(); i++)
+    /* for(int i = 0; i < tab.size(); i++)          // Najgorszy przypadek quickSort
     {
         tab[i] = tab.size() - i;
-    }
+    } */
 
     Timer timer, timer2, timer3;
 
@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
 
     std::cout << "Quick - Waited for " << timer.sInterval() << "s\n";
 
-    /* timer2.start();
+    timer2.start();
     mergeSort(tab);
     timer2.stop();
 
@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
     bubbleSort(tab);
     timer3.stop();
 
-    std::cout << "Bubble - Waited for " << timer3.sInterval() << "s\n"; */
+    std::cout << "Bubble - Waited for " << timer3.sInterval() << "s\n";
 
     return 0;
 }
