@@ -15,6 +15,8 @@ struct VertexResult
 
 using ShortestPathResult = std::map<int, VertexResult>;
 
+int smallest(int vertexNum, std::vector<int> path, ShortestPathResult result);
+
 void dijkstra(Graph& graph, int sourceIndex, ShortestPathResult& result);
 bool bellmanFord(Graph& graph, int sourceIndex, ShortestPathResult& result);
 

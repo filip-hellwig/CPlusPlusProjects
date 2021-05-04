@@ -9,8 +9,6 @@ class AdjacencyListGraph : public Graph
 {
 
   public:
-    // TODO: implement all required methods
-
     static std::unique_ptr<Graph> createGraph(std::istream& is);
 };
 
