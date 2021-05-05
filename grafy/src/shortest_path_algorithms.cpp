@@ -41,15 +41,15 @@ void dijkstra(Graph& graph, int sourceIndex, ShortestPathResult& result)
     {
         int next;
 
-        for (int j = 0; j < graph.vertexNum; j++)
+        for (int j = 0; j < graph.getNumberOfIterations(pathOfAlgorithm[i]); j++)
         {
-            if (graph.graph[pathOfAlgorithm[i]][j] != INFI)
+            if (graph.checkExistence(pathOfAlgorithm[i], graph.getIndex(pathOfAlgorithm[i], j)))
             {
-                if (result[pathOfAlgorithm[i]].cost + graph.graph[pathOfAlgorithm[i]][j] < result[j].cost)
+                if (result[pathOfAlgorithm[i]].cost + graph.getCost(pathOfAlgorithm[i], j) < result[graph.getIndex(pathOfAlgorithm[i], j)].cost)
                 {
-                    result[j].cost = result[pathOfAlgorithm[i]].cost + graph.graph[pathOfAlgorithm[i]][j];
-                    result[j].path = result[pathOfAlgorithm[i]].path;
-                    result[j].path.push_back(pathOfAlgorithm[i]);
+                    result[graph.getIndex(pathOfAlgorithm[i], j)].cost = result[pathOfAlgorithm[i]].cost + graph.getCost(pathOfAlgorithm[i], j);
+                    result[graph.getIndex(pathOfAlgorithm[i], j)].path = result[pathOfAlgorithm[i]].path;
+                    result[graph.getIndex(pathOfAlgorithm[i], j)].path.push_back(pathOfAlgorithm[i]);
                 }
             }
         }
@@ -69,6 +69,43 @@ void dijkstra(Graph& graph, int sourceIndex, ShortestPathResult& result)
 
 bool bellmanFord(Graph& graph, int sourceIndex, ShortestPathResult& result)
 {
-    // TODO: implement
+    /* for (int i = 0; i < graph.vertexNum; i++)
+    {
+        result[i].cost = INFI;
+    }
+    result[sourceIndex].cost = 0;
+
+    for (int k = 0; k < graph.vertexNum - 1; k++)
+    {
+        for (int i = 0; i < graph.vertexNum - 1; i++)
+        {
+            int next;
+
+            for (int j = 0; j < graph.getNumberOfIterations(pathOfAlgorithm[i]); j++)
+            {
+                if (graph.checkExistence(pathOfAlgorithm[i], graph.getIndex(pathOfAlgorithm[i], j)))
+                {
+                    if (result[pathOfAlgorithm[i]].cost + graph.getCost(pathOfAlgorithm[i], j) < result[graph.getIndex(pathOfAlgorithm[i], j)].cost)
+                    {
+                        result[graph.getIndex(pathOfAlgorithm[i], j)].cost = result[pathOfAlgorithm[i]].cost + graph.getCost(pathOfAlgorithm[i], j);
+                        result[graph.getIndex(pathOfAlgorithm[i], j)].path = result[pathOfAlgorithm[i]].path;
+                        result[graph.getIndex(pathOfAlgorithm[i], j)].path.push_back(pathOfAlgorithm[i]);
+                    }
+                }
+            }
+
+            if (i < graph.vertexNum - 2)
+            {
+                next = smallest(graph.vertexNum, pathOfAlgorithm, result);
+                pathOfAlgorithm.push_back(next);
+            }
+        }
+    }
+
+    for (int i = 0; i < graph.vertexNum; i++)
+    {
+        result[i].path.push_back(i);
+    }*/
+    
     return true;
 }

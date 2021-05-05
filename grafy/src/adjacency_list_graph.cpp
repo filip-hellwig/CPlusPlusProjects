@@ -1,5 +1,26 @@
 #include "graphs/adjacency_list_graph.hpp"
 
+int AdjacencyListGraph::getNumberOfIterations(int index)
+{
+    return graph[index].size();
+}
+
+bool AdjacencyListGraph::checkExistence(int firstIndex, int secondIndex)
+{
+    return true;
+}
+
+int AdjacencyListGraph::getCost(int firstIndex, int secondIndex)
+{
+    return graph[firstIndex][secondIndex].cost;
+}
+
+int AdjacencyListGraph::getIndex(int firstIndex, int secondIndex)
+{
+    return graph[firstIndex][secondIndex].endVertexIndex;
+}
+
+
 std::unique_ptr<Graph> AdjacencyListGraph::createGraph(std::istream& is)
 {
     AdjacencyListGraph resultGraph;
@@ -41,8 +62,8 @@ std::unique_ptr<Graph> AdjacencyListGraph::createGraph(std::istream& is)
         graph[firstVertex].push_back(element);
     }
 
-    /* resultGraph.graph = graph;
-    resultGraph.vertexNum = vertexNum; */
+    resultGraph.graph = graph;
+    resultGraph.vertexNum = vertexNum;
 
-    return std::make_unique<AdjacencyListGraph>(/* resultGraph */);
+    return std::make_unique<AdjacencyListGraph>(resultGraph);
 }

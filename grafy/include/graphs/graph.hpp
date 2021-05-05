@@ -13,15 +13,16 @@ struct graphConnection
     int cost;
 };
 
-/* template<class T> */
 class Graph
 {
   public:
-    std::vector<std::vector<int>> graph;
     int vertexNum;
+
+    virtual int getNumberOfIterations(int index) = 0;
+    virtual bool checkExistence(int firstIndex, int secondIndex) = 0;
+    virtual int getCost(int firstIndex, int secondIndex) = 0;
+    virtual int getIndex(int firstIndex, int secondIndex) = 0;
 };
 
-/* template class Graph<int>;
-template class Graph<graphConnection>; */
 
 #endif /* GRAPH_HPP_ */

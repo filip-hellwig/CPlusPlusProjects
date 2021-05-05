@@ -1,5 +1,31 @@
 #include "graphs/adjacency_matrix_graph.hpp"
 
+int AdjacencyMatrixGraph::getNumberOfIterations(int index)
+{
+    return vertexNum;
+}
+
+bool AdjacencyMatrixGraph::checkExistence(int firstIndex, int secondIndex)
+{
+    if(graph[firstIndex][secondIndex] != INFI)
+    {
+        return true;
+    } else
+    {
+        return false;
+    }
+}
+
+int AdjacencyMatrixGraph::getCost(int firstIndex, int secondIndex)
+{
+    return graph[firstIndex][secondIndex];
+}
+
+int AdjacencyMatrixGraph::getIndex(int firstIndex, int secondIndex)
+{
+    return secondIndex;
+}
+
 std::unique_ptr<Graph> AdjacencyMatrixGraph::createGraph(std::istream& is)
 {
     AdjacencyMatrixGraph resultGraph;
