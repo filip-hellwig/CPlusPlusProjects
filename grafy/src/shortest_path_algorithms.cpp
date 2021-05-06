@@ -7,15 +7,20 @@ int smallest(int vertexNum, std::vector<int> path, ShortestPathResult result)
     int flag = 0;
 
     for(int i = 0; i < vertexNum; i++)
-    {
+    {   
+        // Sprawdzamy czy dany wierzchołek był już wybrany
+        // (Nie może być wybrany drugi raz)
         for (int j = 0; j < path.size(); j++)
-        {
+        {   
             if(path[j] == i)
             {
                 flag = 1;
                 break;
             } 
         }
+
+        // Jeżeli wierzchołek nie był jeszcze wybrany sprawdzamy
+        // czy koszt połączenia do niego jest najmniejszy
         if(result[i].cost < cost && flag == 0)
         {
             smallest = i;
@@ -23,44 +28,64 @@ int smallest(int vertexNum, std::vector<int> path, ShortestPathResult result)
         }
         flag = 0;
     }
-    return smallest;
+
+    return smallest;        // Zwracamy wierzchołek o najniżyszm koszcie połącznia 
 }
 
 void dijkstra(Graph& graph, int sourceIndex, ShortestPathResult& result)
 {
+    // Inicjujemy tablicę wyników, koszta ustawiamy na INFI
     for (int i = 0; i < graph.vertexNum; i++)
     {
         result[i].cost = INFI;
     }
+    // Koszt dotarcia do wierzchołka początkowego to 0
     result[sourceIndex].cost = 0;
 
+
+    // Zmienna służąca do przechowywania drogi algorytmu
+    // (Czyli przechowuje informacje o wszystkich poprzednich wierzchołkach)
     std::vector<int> pathOfAlgorithm;
+
     pathOfAlgorithm.push_back(sourceIndex);
 
+    // Przechodzimy po wszystkich wierzchołkach oprócz ostatniego
     for (int i = 0; i < graph.vertexNum - 1; i++)
-    {
-        int next;
+    {   
+        // Ostatni wierzchołek w ścieżce
+        int startVertex = pathOfAlgorithm[i];
 
-        for (int j = 0; j < graph.getNumberOfIterations(pathOfAlgorithm[i]); j++)
+        // Sprawdzamy wszystkie połączenia dla danego wierzchołka początkowego 
+        for (int j = 0; j < graph.getNumberOfIterations(startVertex); j++)
         {
-            if (graph.checkExistence(pathOfAlgorithm[i], graph.getIndex(pathOfAlgorithm[i], j)))
+            if (graph.checkExistence(startVertex, graph.getIndex(startVertex, j)))
             {
-                if (result[pathOfAlgorithm[i]].cost + graph.getCost(pathOfAlgorithm[i], j) < result[graph.getIndex(pathOfAlgorithm[i], j)].cost)
+                // Sprawdzamy czy nowy sposób dotarcia do wierzchołka jest 
+                // mniej kosztowyny od starego sposobu
+                if (result[startVertex].cost + graph.getCost(startVertex, j) 
+                    < result[graph.getIndex(startVertex, j)].cost)
                 {
-                    result[graph.getIndex(pathOfAlgorithm[i], j)].cost = result[pathOfAlgorithm[i]].cost + graph.getCost(pathOfAlgorithm[i], j);
-                    result[graph.getIndex(pathOfAlgorithm[i], j)].path = result[pathOfAlgorithm[i]].path;
-                    result[graph.getIndex(pathOfAlgorithm[i], j)].path.push_back(pathOfAlgorithm[i]);
+                    // Przypisujemy nowy koszt dotarcia do wierzchołka
+                    result[graph.getIndex(startVertex, j)].cost = 
+                        result[startVertex].cost + graph.getCost(startVertex, j);
+
+                    // Przypisujemy drogę dotarcia do wierzchołka początkowego połącznia
+                    result[graph.getIndex(startVertex, j)].path = result[startVertex].path;
+
+                    // Dodajemy do drogi wierzchołek początkowy
+                    result[graph.getIndex(startVertex, j)].path.push_back(startVertex);
                 }
             }
         }
 
+        // Dodajemy następny wierzchołek do którego pójdziemy
         if (i < graph.vertexNum - 2)
         {
-            next = smallest(graph.vertexNum, pathOfAlgorithm, result);
-            pathOfAlgorithm.push_back(next);
+            pathOfAlgorithm.push_back(smallest(graph.vertexNum, pathOfAlgorithm, result));
         }
     }
 
+    // Dodajemy do drogi wierzchołek końcowy
     for (int i = 0; i < graph.vertexNum; i++)
     {
         result[i].path.push_back(i);
@@ -69,43 +94,71 @@ void dijkstra(Graph& graph, int sourceIndex, ShortestPathResult& result)
 
 bool bellmanFord(Graph& graph, int sourceIndex, ShortestPathResult& result)
 {
-    /* for (int i = 0; i < graph.vertexNum; i++)
+    // Inicjujemy tablicę wyników, koszta ustawiamy na INFI
+    for (int i = 0; i < graph.vertexNum; i++)
     {
         result[i].cost = INFI;
     }
+
+    // Koszt dotarcia do wierzchołka początkowego to 0
     result[sourceIndex].cost = 0;
 
-    for (int k = 0; k < graph.vertexNum - 1; k++)
+    // Pętlę wyknujemy ilość razy zgodną z ilością wierzchołków
+    // Ostatnie iteracja służy do sprawdzenia czy nie ma ujemnej pętli
+    for (int k = 0; k < graph.vertexNum; k++)
     {
-        for (int i = 0; i < graph.vertexNum - 1; i++)
+        // Wykonujemy normalnie relaksację
+        if (k < graph.vertexNum - 1)
         {
-            int next;
-
-            for (int j = 0; j < graph.getNumberOfIterations(pathOfAlgorithm[i]); j++)
-            {
-                if (graph.checkExistence(pathOfAlgorithm[i], graph.getIndex(pathOfAlgorithm[i], j)))
+            // Przechodzimy po wszystkich wierzchołkach
+            for (int i = 0; i < graph.vertexNum; i++)
+            {   
+                // Sprawdzamy wszystkie połączenia dla danego wierzchołka początkowego
+                for (int j = 0; j < graph.getNumberOfIterations(i); j++)
                 {
-                    if (result[pathOfAlgorithm[i]].cost + graph.getCost(pathOfAlgorithm[i], j) < result[graph.getIndex(pathOfAlgorithm[i], j)].cost)
+                    if (graph.checkExistence(i, graph.getIndex(i, j)) && result[i].cost != INFI)
                     {
-                        result[graph.getIndex(pathOfAlgorithm[i], j)].cost = result[pathOfAlgorithm[i]].cost + graph.getCost(pathOfAlgorithm[i], j);
-                        result[graph.getIndex(pathOfAlgorithm[i], j)].path = result[pathOfAlgorithm[i]].path;
-                        result[graph.getIndex(pathOfAlgorithm[i], j)].path.push_back(pathOfAlgorithm[i]);
+                        // Sprawdzamy czy nowy sposób dotarcia do wierzchołka jest 
+                        // mniej kosztowyny od starego sposobu
+                        if (result[i].cost + graph.getCost(i, j) < result[graph.getIndex(i, j)].cost)
+                        {
+                            // Przypisujemy nowy koszt dotarcia do wierzchołka
+                            result[graph.getIndex(i, j)].cost = result[i].cost + graph.getCost(i, j);
+
+                            // Przypisujemy drogę dotarcia do wierzchołka początkowego połącznia
+                            result[graph.getIndex(i, j)].path = result[i].path;
+
+                            // Dodajemy do drogi wierzchołek początkowy
+                            result[graph.getIndex(i, j)].path.push_back(i);
+                        }
                     }
                 }
             }
-
-            if (i < graph.vertexNum - 2)
+        } else      // Sprawdzamy wystąpienie ujemnej pętli
+        {
+            for (int i = 0; i < graph.vertexNum; i++)
             {
-                next = smallest(graph.vertexNum, pathOfAlgorithm, result);
-                pathOfAlgorithm.push_back(next);
+                for (int j = 0; j < graph.getNumberOfIterations(i); j++)
+                {
+                    if (graph.checkExistence(i, graph.getIndex(i, j)))
+                    {
+                        // Jeżeli jakikolwiek wierzchołek zmieniał by koszt to zwracamy fałsz
+                        // (Wsyzstkie wiechołki powinny mieć ostateczne wartości dla vertexNum-1)
+                        if (result[i].cost + graph.getCost(i, j) < result[graph.getIndex(i, j)].cost)
+                        {
+                            return false;
+                        }
+                    }
+                }
             }
         }
     }
 
+    // Dodajemy do drogi wierzchołek końcowy
     for (int i = 0; i < graph.vertexNum; i++)
     {
         result[i].path.push_back(i);
-    }*/
+    }
     
     return true;
 }

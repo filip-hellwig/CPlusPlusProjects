@@ -122,7 +122,7 @@ TEST_CASE("Adjacency List Graph -- Dijktra")
     checkShortestPathResult(result, refResult);
 }
 
-/* TEST_CASE("Adjacency Matrix Graph -- Bellman-Ford")
+TEST_CASE("Adjacency Matrix Graph -- Bellman-Ford")
 {
     auto [inputFile, refFile] = GENERATE(std::make_tuple(dataDirectoryPath / "graph" / "graphV10D0.5Negative.txt",
                                                          dataDirectoryPath / "sp_result" / "spV10D0.5Negative.txt"),
@@ -166,4 +166,4 @@ TEST_CASE("Adjacency List Graph -- Bellman-Ford")
     REQUIRE(bellmanFord(*graph, sourceIndex, result));
 
     checkShortestPathResult(result, refResult);
-} */
+}

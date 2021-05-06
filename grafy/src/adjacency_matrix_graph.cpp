@@ -2,11 +2,12 @@
 
 int AdjacencyMatrixGraph::getNumberOfIterations(int index)
 {
-    return vertexNum;
+    return vertexNum;       // Zwracamy liczbę wierzchołków
 }
 
 bool AdjacencyMatrixGraph::checkExistence(int firstIndex, int secondIndex)
 {
+    // Sprawdzamy czy dane połącznie istnieje (INFI oznacza że nie istnieje)
     if(graph[firstIndex][secondIndex] != INFI)
     {
         return true;
@@ -18,7 +19,7 @@ bool AdjacencyMatrixGraph::checkExistence(int firstIndex, int secondIndex)
 
 int AdjacencyMatrixGraph::getCost(int firstIndex, int secondIndex)
 {
-    return graph[firstIndex][secondIndex];
+    return graph[firstIndex][secondIndex];          // Zwracamy dany element macierzy
 }
 
 int AdjacencyMatrixGraph::getIndex(int firstIndex, int secondIndex)
@@ -28,20 +29,23 @@ int AdjacencyMatrixGraph::getIndex(int firstIndex, int secondIndex)
 
 std::unique_ptr<Graph> AdjacencyMatrixGraph::createGraph(std::istream& is)
 {
-    AdjacencyMatrixGraph resultGraph;
+    AdjacencyMatrixGraph resultGraph;           // To będziemy zwracać, posiada graph i vertexNum
     std::vector<std::vector<int>> graph;
     int vertexNum, edgeNum;
-
+    int firstVertex, secondVertex;
     std::string line;
     
+    // Pobieramy liczbę wierzchołków
     std::getline(is, line, ' ');
     vertexNum = std::stoi(line);
     line.clear();
 
+    // Pobieramy liczbę krawędzi
     std::getline(is, line);
     edgeNum = std::stoi(line);
     line.clear();
 
+    // Inicjujemy graf
     for (int i = 0; i < vertexNum; i++) {
 
         std::vector<int> v1;
@@ -50,21 +54,23 @@ std::unique_ptr<Graph> AdjacencyMatrixGraph::createGraph(std::istream& is)
         }
         graph.push_back(v1);
     }
-    
-    int firstVertex, secondVertex;
 
+    // Za pomocą pętli pobieramy wszystkie połącznia występujące w grafie
     for(int i = 0; i<edgeNum; i++)
     {
+        // Pobieramy wierzchołek początkowy połączenia
         std::getline(is, line, ' ');
         firstVertex = std::stoi(line);
         line.clear();
 
+        // Pobieramy wierzchołek końcowy połączenia
         std::getline(is, line, ' ');
         secondVertex = std::stoi(line);
         line.clear();
 
+        // Pobieramy koszt połączenia
         std::getline(is, line);
-        graph[firstVertex][secondVertex] = std::stoi(line);
+        graph[firstVertex][secondVertex] = std::stoi(line);     //Wpisujemy połacznei do grafu
         line.clear();
     }
 
