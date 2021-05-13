@@ -1,0 +1,6 @@
+/home/filip/szkola/semestr4/pamsi/pamsi/sortowanie/build/CMakeFiles/rebuild_cache.dir
+/home/filip/szkola/semestr4/pamsi/pamsi/sortowanie/build/CMakeFiles/edit_cache.dir
+/home/filip/szkola/semestr4/pamsi/pamsi/sortowanie/build/CMakeFiles/sorting_performance.dir
+/home/filip/szkola/semestr4/pamsi/pamsi/sortowanie/build/CMakeFiles/data_generator.dir
+/home/filip/szkola/semestr4/pamsi/pamsi/sortowanie/build/CMakeFiles/test_sorting.dir
+/home/filip/szkola/semestr4/pamsi/pamsi/sortowanie/build/CMakeFiles/sorting.dir

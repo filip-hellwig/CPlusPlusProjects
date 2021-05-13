@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/filip/szkola/semestr4/pamsi/pamsi/sortowanie/src/data_generator.cpp
+algorithm
+-
+fstream
+-
+functional
+-
+iostream
+-
+iterator
+-
+random
+-
+vector
+-
+sstream
+-
+

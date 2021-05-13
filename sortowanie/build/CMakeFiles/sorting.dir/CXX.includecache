@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/sorting/sorting.hpp
+vector
+-
+
+/home/filip/szkola/semestr4/pamsi/pamsi/sortowanie/src/sorting.cpp
+sorting/sorting.hpp
+/home/filip/szkola/semestr4/pamsi/pamsi/sortowanie/src/sorting/sorting.hpp
+

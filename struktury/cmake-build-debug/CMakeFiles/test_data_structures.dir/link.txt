@@ -1,1 +1,1 @@
-/usr/bin/c++  -g   CMakeFiles/test_data_structures.dir/src/test_data_structures.cpp.o CMakeFiles/test_data_structures.dir/src/test_stl_data_structures.cpp.o  -o test_data_structures 
+/usr/bin/c++ -g CMakeFiles/test_data_structures.dir/src/test_data_structures.cpp.o CMakeFiles/test_data_structures.dir/src/test_stl_data_structures.cpp.o -o test_data_structures 

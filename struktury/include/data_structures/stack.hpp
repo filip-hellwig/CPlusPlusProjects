@@ -42,7 +42,7 @@ void Stack<T>::push(const T& newElement)        // dodajemy element na początek
 }
 
 template <typename T>
-T Stack<T>::pop()     // ściągamy element z kończa stosu
+T Stack<T>::pop()     // ściągamy element z początku stosu
 {
   T pop_value;
 

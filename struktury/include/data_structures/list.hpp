@@ -173,7 +173,7 @@ typename List<T>::Iterator::difference_type List<T>::Iterator::operator-(const I
   for(; iter != iterEnd; diff_value++, ++iter)
   {
   }
-
+     
   return diff_value;
   
 }
