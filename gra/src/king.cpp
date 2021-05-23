@@ -1,10 +1,17 @@
 #include "king.hpp"
+class Board;
 
-bool King::makeMove(char column, int row)
+bool King::makeMove(int column, int row, std::vector<std::vector<std::shared_ptr<Chessman>>> board)
 {
-    Position nextMove;
+    Position nextMove(column, row);
 
-    nextMove = translateMove(column, row);
+    if ( board[nextMove.row][nextMove.column] != nullptr )
+    {
+        if ( board[nextMove.row][nextMove.column]->getWhite() == white)
+        {
+            return false;
+        }
+    }
 
     if (checkIndexValidity(nextMove.column, nextMove.row))
     {
@@ -21,4 +28,16 @@ bool King::makeMove(char column, int row)
     }
 
     return false;
+}
+
+std::string King::name()
+{
+    if(white)
+    {
+        return "b_K";
+    } else
+    {
+        return "c_K";
+    }
+    
 }

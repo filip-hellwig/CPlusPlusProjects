@@ -2,29 +2,26 @@
 #define BOARD_HPP_
 
 #include "chessman.hpp"
+#include "bishop.hpp"
+#include "king.hpp"
+#include "knight.hpp"
+#include "pawn.hpp"
+#include "queen.hpp"
+#include "rook.hpp"
 #include <vector>
 #include <memory>
+#include <iostream>
 
 class Board
-{
-    std::vector<std::vector<std::shared_ptr<Chessman>>> board;
+{   
+    protected:
+        std::vector<std::vector<std::shared_ptr<Chessman>>> board;
 
-    Board()
-    {
-        for (int i = 0; i < 8; i++)
-        {
-            std::vector<std::shared_ptr<Chessman>> v;
-
-            std::vector<int> v;
-            for (int j = 0; j < 8; j++) {
-                v.push_back(nullptr);
-            }
-
-            board.push_back(v);
-        }
-
-        
-    }
+    public:
+        Board();
+        void showBoard();
+        std::vector<std::vector<std::shared_ptr<Chessman>>> getBoard();
+        std::shared_ptr<Chessman> changePiece(int column, int row);
 };
 
 #endif

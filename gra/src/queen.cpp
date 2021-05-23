@@ -1,10 +1,16 @@
 #include "queen.hpp"
 
-bool Queen::makeMove(char column, int row)
+bool Queen::makeMove(int column, int row, std::vector<std::vector<std::shared_ptr<Chessman>>> board)
 {
-    Position nextMove;
+    Position nextMove(column, row);
 
-    nextMove = translateMove(column, row);
+    if ( board[nextMove.row][nextMove.column] != nullptr )
+    {
+        if ( board[nextMove.row][nextMove.column]->getWhite() == white)
+        {
+            return false;
+        }
+    }
 
     if (checkIndexValidity(nextMove.column, nextMove.row))
     {
@@ -36,6 +42,18 @@ bool Queen::makeMove(char column, int row)
             }
         }
     }
+    
 
     return false;
+}
+
+std::string Queen::name()
+{
+    if(white)
+    {
+        return "b_Q";
+    } else
+    {
+        return "c_Q";
+    }
 }

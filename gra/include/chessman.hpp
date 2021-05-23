@@ -3,13 +3,9 @@
 
 #include <stdlib.h>
 #include <iostream>
-
-struct Position
-{
-    int row;
-    int column;
-};
-
+#include <vector>
+#include <memory>
+#include "position.hpp"
 
 class Chessman
 {
@@ -19,14 +15,15 @@ class Chessman
         bool white;
     
     public:
-        virtual bool makeMove(char column, int row) = 0;
+        virtual bool makeMove(int column, int row, std::vector<std::vector<std::shared_ptr<Chessman>>> board) = 0;
         bool checkMoveValidity(int column, int row);
+        virtual std::string name() = 0;
 
 
         Chessman(int column, int row, bool isWhite)
         {
-            position.column = column;
-            position.row = row;
+            Position newPosition(column, row);
+            position = newPosition;
             existance = true;
             white = isWhite;
         }        
@@ -44,23 +41,8 @@ class Chessman
             return true;
         }
 
-        Position translateMove(char column, int row)
-        {
-            Position temp;
-            temp.row = row-1;
-            
-            if (column == 'a') { temp.column = 0; }
-            else if (column == 'b') { temp.column = 1; }
-            else if (column == 'c') { temp.column = 2; }
-            else if (column == 'd') { temp.column = 3; }
-            else if (column == 'e') { temp.column = 4; }
-            else if (column == 'f') { temp.column = 5; }
-            else if (column == 'g') { temp.column = 6; }
-            else if (column == 'h') { temp.column = 7; }
-            else { temp.column = -1; }
-
-            return temp;
-        }
+        bool getWhite() { return white; }
+        bool getExistance() { return existance; }
 };
 
 

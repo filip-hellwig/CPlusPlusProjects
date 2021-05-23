@@ -8,7 +8,8 @@ class Bishop : public Chessman
 {
     public:
         using Chessman::Chessman;
-        bool makeMove(char column, int row) override;
+        bool makeMove(int column, int row, std::vector<std::vector<std::shared_ptr<Chessman>>> board) override;
+        std::string name() override;
 };
 
 #endif

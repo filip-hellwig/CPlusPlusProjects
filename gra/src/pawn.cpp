@@ -1,10 +1,16 @@
 #include "pawn.hpp"
 
-bool Pawn::makeMove(char column, int row)
+bool Pawn::makeMove(int column, int row, std::vector<std::vector<std::shared_ptr<Chessman>>> board)
 {
-    Position nextMove;
+    Position nextMove(column, row);
 
-    nextMove = translateMove(column, row);
+    if ( board[nextMove.row][nextMove.column] != nullptr )
+    {
+        if ( board[nextMove.row][nextMove.column]->getWhite() == white)
+        {
+            return false;
+        }
+    }
 
     if (checkIndexValidity(nextMove.column, nextMove.row))
     {
@@ -68,4 +74,15 @@ bool Pawn::makeMove(char column, int row)
     }
 
     return false;
+}
+
+std::string Pawn::name()
+{
+    if(white)
+    {
+        return "b_P";
+    } else
+    {
+        return "c_P";
+    }
 }
