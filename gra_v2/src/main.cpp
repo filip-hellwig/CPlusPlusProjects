@@ -12,68 +12,77 @@ int main(int argc, char* argv[])
     Position start_pos, end_pos;
     std::shared_ptr<Chessman> changing;
     Board b;
-    Human p1(true);
-    Human p2(false);
-    Player currentTurn;
+    std::shared_ptr<Human> p1 = std::make_shared<Human> (true);
+    std::shared_ptr<Human> p2 = std::make_shared<Human> (false);
+    std::shared_ptr<Player> currentTurn, opponent;
     char x;
-    int y, flagQueen;
+    int y;
+    int flagQueen = 0;
 
-    if (p1.isWhiteSide()) 
+    if (p1->isWhiteSide()) 
     {
         currentTurn = p1;
+        opponent = p2;
     } else 
     {
         currentTurn = p2;
+        opponent = p1;
     }
 
     while(true)
     {
-        while(true)
+        b.showBoard();
+        std::cout << "Which piece you want to move? ";
+        std::cin >> x >> y;
+        start_pos = start_pos.translateMove(x,y);
+
+        if(b.getBoard()[start_pos.column][start_pos.row] != nullptr)
         {
-            b.showBoard();
-            std::cout << "Which piece you want to move? ";
-            std::cin >> x >> y;
-            start_pos = start_pos.translateMove(x,y);
-
-            if(b.getBoard()[start_pos.column][start_pos.row] != nullptr)
+            if ( b.getBoard()[start_pos.column][start_pos.row]->getWhite() == currentTurn->isWhiteSide() )
             {
-                if ( b.getBoard()[start_pos.column][start_pos.row]->getWhite() == currentTurn.isWhiteSide() )
+                std::cout << "Where to move the piece? ";
+                std::cin >> x >> y;
+                end_pos = end_pos.translateMove(x,y);
+
+                if (b.getBoard()[start_pos.column][start_pos.row]->makeMove(end_pos, b.getBoard(), flagQueen, opponent->getPieceNum()))
                 {
-                    std::cout << "Where to move the piece? ";
-                    std::cin >> x >> y;
-                    end_pos = end_pos.translateMove(x,y);
+                    std::swap(b.changePiece(end_pos.column, end_pos.row), b.changePiece(start_pos.column, start_pos.row));
 
-                    if (b.getBoard()[start_pos.column][start_pos.row]->makeMove(end_pos, b.getBoard(), flagQueen))
+                    if (flagQueen == 1)
                     {
-                        std::swap(b.changePiece(end_pos.column, end_pos.row), b.changePiece(start_pos.column, start_pos.row));
-
-                        if (flagQueen == 1)
-                        {
-                            b.changePiece(end_pos.column, end_pos.row) = std::make_shared<Queen>(end_pos.column, end_pos.row, currentTurn.isWhiteSide());
-                        }
-
-                        if (p1 == currentTurn)
-                        {
-                            currentTurn = p2;
-                        } else
-                        {
-                            currentTurn = p1;
-                        }
-                        continue;
-                    } else 
-                    {
-                        std::cout << "This is invalid move\n";
+                        b.changePiece(end_pos.column, end_pos.row) = std::make_shared<Queen>(end_pos.column, end_pos.row, currentTurn->isWhiteSide());
                     }
-                } else
+
+                    if (opponent->getPieceNum() == 0)
+                    { 
+                        break; 
+                    }
+
+                    if (p1 == currentTurn)
+                    {
+                        currentTurn = p2;
+                        opponent = p1;
+                    } else
+                    {
+                        currentTurn = p1;
+                        opponent = p2;
+                    }
+                    continue;
+                } else 
                 {
-                    std::cout << "You picked wrong color\n";
+                    std::cout << "This is invalid move\n";
                 }
             } else
             {
-                std::cout << "There is no piece\n";
+                std::cout << "You picked wrong color\n";
             }
+        } else
+        {
+            std::cout << "There is no piece\n";
         }
     }
+
+    b.showBoard();
 
 
     return 0;

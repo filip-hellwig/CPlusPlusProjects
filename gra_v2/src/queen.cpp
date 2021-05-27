@@ -1,6 +1,6 @@
 #include "queen.hpp"
 
-bool Queen::makeMove(Position nextMove, std::vector<std::vector<std::shared_ptr<Chessman>>>& board, int& flagQueen)
+bool Queen::makeMove(Position nextMove, std::vector<std::vector<std::shared_ptr<Chessman>>>& board, int& flagQueen, int& pieceNum)
 {
     if ( board[nextMove.column][nextMove.row] != nullptr )
     {  
@@ -58,7 +58,7 @@ bool Queen::makeMove(Position nextMove, std::vector<std::vector<std::shared_ptr<
                 position = nextMove;
                 return true;
             }
-        } else if ( checkJumping(nextMove, board, flagQueen))
+        } else if ( checkJumping(nextMove, board, flagQueen, pieceNum))
         {
             position = nextMove;
             return true;

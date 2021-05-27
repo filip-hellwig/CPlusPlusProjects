@@ -6,6 +6,7 @@
 #include <vector>
 #include <memory>
 #include "position.hpp"
+class Player;
 
 class Chessman
 {
@@ -15,7 +16,8 @@ class Chessman
         bool white;
     
     public:
-        virtual bool makeMove(Position nextMove, std::vector<std::vector<std::shared_ptr<Chessman>>>& board, int& flagQueen) = 0;
+        virtual bool makeMove(Position nextMove, std::vector<std::vector<std::shared_ptr<Chessman>>>& board,
+                                int& flagQueen, int& pieceNum) = 0;
         virtual std::string name() = 0;
 
 
@@ -60,161 +62,197 @@ class Chessman
             return 0;
         } */
 
-        bool checkJumping(Position nextMove, std::vector<std::vector<std::shared_ptr<Chessman>>>& board, int& flagQueen)
+        bool checkMaxJump(Position nextMove, std::vector<std::vector<std::shared_ptr<Chessman>>>& board)
+        {
+            int i = 0;
+            Position pos;
+
+            if (checkIndexValidity(nextMove.column+2, nextMove.row+2)
+                && board[nextMove.column+1][nextMove.row+1] != nullptr
+                && board[nextMove.column+1][nextMove.row+1]->getWhite() != white
+                && (board[nextMove.column+2][nextMove.row+2] == nullptr
+                || (board[nextMove.column+2][nextMove.row+2] != nullptr
+                && pos.setPostition(nextMove.column+2, nextMove.row+2) == position)))
+            { i++; }
+            if (checkIndexValidity(nextMove.column-2, nextMove.row+2)
+                && board[nextMove.column-1][nextMove.row+1] != nullptr
+                && board[nextMove.column-1][nextMove.row+1]->getWhite() != white
+                && (board[nextMove.column-2][nextMove.row+2] == nullptr
+                || (board[nextMove.column-2][nextMove.row+2] != nullptr
+                && pos.setPostition(nextMove.column-2, nextMove.row+2) == position)))
+            { i++; }
+            if (checkIndexValidity(nextMove.column+2, nextMove.row-2)
+                && board[nextMove.column+1][nextMove.row-1] != nullptr
+                && board[nextMove.column+1][nextMove.row-1]->getWhite() != white
+                && (board[nextMove.column+2][nextMove.row-2] == nullptr
+                || (board[nextMove.column+2][nextMove.row-2] != nullptr
+                && pos.setPostition(nextMove.column+2, nextMove.row-2) == position)))
+            { i++; }
+            if (checkIndexValidity(nextMove.column-2, nextMove.row-2)
+                && board[nextMove.column-1][nextMove.row-1] != nullptr
+                && board[nextMove.column-1][nextMove.row-1]->getWhite() != white
+                && (board[nextMove.column-2][nextMove.row-2] == nullptr
+                || (board[nextMove.column-2][nextMove.row-2] != nullptr
+                && pos.setPostition(nextMove.column-2, nextMove.row-2) == position)))
+            { i++; }
+
+            if (i > 1) { return false; }
+            else { return true; } 
+        }
+
+
+        bool checkJumping(Position nextMove, std::vector<std::vector<std::shared_ptr<Chessman>>>& board, int& flagQueen, int& pieceNum)
         {
             Position newPosition;
             std::shared_ptr<Chessman> histPiece;
 
-            if (checkIndexValidity(nextMove.column+2, nextMove.row+2))
+            if (checkIndexValidity(nextMove.column+2, nextMove.row+2)
+                && board[nextMove.column+1][nextMove.row+1] != nullptr
+                && board[nextMove.column+1][nextMove.row+1]->getWhite() != white)
             {
-                if ( board[nextMove.column+1][nextMove.row+1] != nullptr )
+                if (board[nextMove.column+2][nextMove.row+2] != nullptr)
                 {
-                    if ( board[nextMove.column+1][nextMove.row+1]->getWhite() != white )
+                    if (newPosition.setPostition(nextMove.column+2, nextMove.row+2) == position)
                     {
-                        if (board[nextMove.column+2][nextMove.row+2] != nullptr)
-                        {
-                            if (newPosition.setPostition(nextMove.column+2, nextMove.row+2) == position)
-                            {
-                                board[nextMove.column+1][nextMove.row+1]->changeExistance(false);
-                                board[nextMove.column+1][nextMove.row+1] = nullptr;
-                                return true;
-                            }
-                        } else 
-                        {
-                            board[nextMove.column+1][nextMove.row+1]->changeExistance(false);
-                            histPiece = board[nextMove.column+1][nextMove.row+1];
-                            board[nextMove.column+1][nextMove.row+1] = nullptr;
-
-                            
-                            if(checkJumping(newPosition.setPostition(nextMove.column+2, nextMove.row+2), board, flagQueen))
-                            {
-                                if((nextMove.row+2 == 7 && white == true)
-                                    || (nextMove.row+2 == 0 && white == false))
-                                {
-                                    flagQueen = 1;
-                                }
-                                return true;
-                            }
-
-                            board[nextMove.column+1][nextMove.row+1] = histPiece;
-                            board[nextMove.column+1][nextMove.row+1]->changeExistance(true);
-                            histPiece = nullptr;
-                        }
+                        board[nextMove.column+1][nextMove.row+1]->changeExistance(false);
+                        board[nextMove.column+1][nextMove.row+1] = nullptr;
+                        pieceNum -= 1;
+                        return true;
                     }
+                } else 
+                {
+                    board[nextMove.column+1][nextMove.row+1]->changeExistance(false);
+                    histPiece = board[nextMove.column+1][nextMove.row+1];
+                    board[nextMove.column+1][nextMove.row+1] = nullptr;
+                    pieceNum -= 1;
+
+                    
+                    if(checkJumping(newPosition.setPostition(nextMove.column+2, nextMove.row+2), board, flagQueen, pieceNum))
+                    {
+                        if((nextMove.row+2 == 7 && white == true)
+                            || (nextMove.row+2 == 0 && white == false))
+                        {
+                            flagQueen = 1;
+                        }
+                        return true;
+                    }
+
+                    board[nextMove.column+1][nextMove.row+1] = histPiece;
+                    board[nextMove.column+1][nextMove.row+1]->changeExistance(true);
+                    histPiece = nullptr;
+                    pieceNum += 1;
                 }
             }
-            if (checkIndexValidity(nextMove.column-2, nextMove.row+2))
+            if (checkIndexValidity(nextMove.column-2, nextMove.row+2)
+                && board[nextMove.column-1][nextMove.row+1] != nullptr
+                && board[nextMove.column-1][nextMove.row+1]->getWhite() != white)
             {
-                if ( board[nextMove.column-1][nextMove.row+1] != nullptr )
+                if (board[nextMove.column-2][nextMove.row+2] != nullptr)
                 {
-                    if ( board[nextMove.column-1][nextMove.row+1]->getWhite() != white )
+                    if (newPosition.setPostition(nextMove.column-2, nextMove.row+2) == position)
                     {
-                        if (board[nextMove.column-2][nextMove.row+2] != nullptr)
-                        {
-                            if (newPosition.setPostition(nextMove.column-2, nextMove.row+2) == position)
-                            {
-                                board[nextMove.column-1][nextMove.row+1]->changeExistance(false);
-                                board[nextMove.column-1][nextMove.row+1] = nullptr;
-                                return true;
-                            }
-                        } else 
-                        {
-                            board[nextMove.column-1][nextMove.row+1]->changeExistance(false);
-                            histPiece = board[nextMove.column-1][nextMove.row+1];
-                            board[nextMove.column-1][nextMove.row+1] = nullptr;
-
-                            
-                            if(checkJumping(newPosition.setPostition(nextMove.column-2, nextMove.row+2), board, flagQueen))
-                            {
-                                if((nextMove.row+2 == 7 && white == true)
-                                    || (nextMove.row+2 == 0 && white == false))
-                                {
-                                    flagQueen = 1;
-                                }
-                                return true;
-                            }
-
-                            board[nextMove.column-1][nextMove.row+1] = histPiece;
-                            board[nextMove.column-1][nextMove.row+1]->changeExistance(true);
-                            histPiece = nullptr;
-                        }
+                        board[nextMove.column-1][nextMove.row+1]->changeExistance(false);
+                        board[nextMove.column-1][nextMove.row+1] = nullptr;
+                        pieceNum -= 1;
+                        return true;
                     }
+                } else 
+                {
+                    board[nextMove.column-1][nextMove.row+1]->changeExistance(false);
+                    histPiece = board[nextMove.column-1][nextMove.row+1];
+                    board[nextMove.column-1][nextMove.row+1] = nullptr;
+                    pieceNum -= 1;
+
+                    
+                    if(checkJumping(newPosition.setPostition(nextMove.column-2, nextMove.row+2), board, flagQueen, pieceNum))
+                    {
+                        if((nextMove.row+2 == 7 && white == true)
+                            || (nextMove.row+2 == 0 && white == false))
+                        {
+                            flagQueen = 1;
+                        }
+                        return true;
+                    }
+
+                    board[nextMove.column-1][nextMove.row+1] = histPiece;
+                    board[nextMove.column-1][nextMove.row+1]->changeExistance(true);
+                    histPiece = nullptr;
+                    pieceNum += 1;
                 }
             }
-            if (checkIndexValidity(nextMove.column+2, nextMove.row-2))
+            if (checkIndexValidity(nextMove.column+2, nextMove.row-2)
+                && board[nextMove.column+1][nextMove.row-1] != nullptr
+                && board[nextMove.column+1][nextMove.row-1]->getWhite() != white)
             {
-                if ( board[nextMove.column+1][nextMove.row-1] != nullptr )
+                if (board[nextMove.column+2][nextMove.row-2] != nullptr)
                 {
-                    if ( board[nextMove.column+1][nextMove.row-1]->getWhite() != white )
+                    if (newPosition.setPostition(nextMove.column+2, nextMove.row-2) == position)
                     {
-                        if (board[nextMove.column+2][nextMove.row-2] != nullptr)
-                        {
-                            if (newPosition.setPostition(nextMove.column+2, nextMove.row-2) == position)
-                            {
-                                board[nextMove.column+1][nextMove.row-1]->changeExistance(false);
-                                board[nextMove.column+1][nextMove.row-1] = nullptr;
-                                return true;
-                            }
-                        } else 
-                        {
-                            board[nextMove.column+1][nextMove.row-1]->changeExistance(false);
-                            histPiece = board[nextMove.column-1][nextMove.row+1];
-                            board[nextMove.column+1][nextMove.row-1] = nullptr;
-
-                            
-                            if(checkJumping(newPosition.setPostition(nextMove.column+2, nextMove.row-2), board, flagQueen))
-                            {
-                                if((nextMove.row-2 == 7 && white == true)
-                                    || (nextMove.row-2 == 0 && white == false))
-                                {
-                                    flagQueen = 1;
-                                }
-                                return true;
-                            }
-
-                            board[nextMove.column+1][nextMove.row-1] = histPiece;
-                            board[nextMove.column+1][nextMove.row-1]->changeExistance(true);
-                            histPiece = nullptr;
-                        }
+                        board[nextMove.column+1][nextMove.row-1]->changeExistance(false);
+                        board[nextMove.column+1][nextMove.row-1] = nullptr;
+                        pieceNum -= 1;
+                        return true;
+                        
                     }
+                } else 
+                {
+                    board[nextMove.column+1][nextMove.row-1]->changeExistance(false);
+                    histPiece = board[nextMove.column-1][nextMove.row+1];
+                    board[nextMove.column+1][nextMove.row-1] = nullptr;
+                    pieceNum -= 1;
+
+                    
+                    if(checkJumping(newPosition.setPostition(nextMove.column+2, nextMove.row-2), board, flagQueen, pieceNum))
+                    {
+                        if((nextMove.row-2 == 7 && white == true)
+                            || (nextMove.row-2 == 0 && white == false))
+                        {
+                            flagQueen = 1;
+                        }
+                        return true;
+                    }
+
+                    board[nextMove.column+1][nextMove.row-1] = histPiece;
+                    board[nextMove.column+1][nextMove.row-1]->changeExistance(true);
+                    histPiece = nullptr;
+                    pieceNum += 1;
                 }
             }
-            if (checkIndexValidity(nextMove.column-2, nextMove.row-2))
+            if (checkIndexValidity(nextMove.column-2, nextMove.row-2)
+                && board[nextMove.column-1][nextMove.row-1] != nullptr
+                && board[nextMove.column-1][nextMove.row-1]->getWhite() != white)
             {
-                if ( board[nextMove.column-1][nextMove.row-1] != nullptr )
+                if (board[nextMove.column-2][nextMove.row-2] != nullptr)
                 {
-                    if ( board[nextMove.column-1][nextMove.row-1]->getWhite() != white )
+                    if (newPosition.setPostition(nextMove.column-2, nextMove.row-2) == position)
                     {
-                        if (board[nextMove.column-2][nextMove.row-2] != nullptr)
-                        {
-                            if (newPosition.setPostition(nextMove.column-2, nextMove.row-2) == position)
-                            {
-                                board[nextMove.column-1][nextMove.row-1]->changeExistance(false);
-                                board[nextMove.column-1][nextMove.row-1] = nullptr;
-                                return true;
-                            }
-                        } else 
-                        {
-                            board[nextMove.column-1][nextMove.row-1]->changeExistance(false);
-                            histPiece = board[nextMove.column-1][nextMove.row-1];
-                            board[nextMove.column-1][nextMove.row-1] = nullptr;
-
-                            
-                            if(checkJumping(newPosition.setPostition(nextMove.column-2, nextMove.row-2), board, flagQueen))
-                            {
-                                if((nextMove.row-2 == 7 && white == true)
-                                    || (nextMove.row-2 == 0 && white == false))
-                                {
-                                    flagQueen = 1;
-                                }
-                                return true;
-                            }
-
-                            board[nextMove.column-1][nextMove.row-1] = histPiece;
-                            board[nextMove.column-1][nextMove.row-1]->changeExistance(true);
-                            histPiece = nullptr;
-                        }
+                        board[nextMove.column-1][nextMove.row-1]->changeExistance(false);
+                        board[nextMove.column-1][nextMove.row-1] = nullptr;
+                        pieceNum -= 1;
+                        return true;
                     }
+                } else 
+                {
+                    board[nextMove.column-1][nextMove.row-1]->changeExistance(false);
+                    histPiece = board[nextMove.column-1][nextMove.row-1];
+                    board[nextMove.column-1][nextMove.row-1] = nullptr;
+                    pieceNum -= 1;
+
+                    
+                    if(checkJumping(newPosition.setPostition(nextMove.column-2, nextMove.row-2), board, flagQueen, pieceNum))
+                    {
+                        if((nextMove.row-2 == 7 && white == true)
+                            || (nextMove.row-2 == 0 && white == false))
+                        {
+                            flagQueen = 1;
+                        }
+                        return true;
+                    }
+
+                    board[nextMove.column-1][nextMove.row-1] = histPiece;
+                    board[nextMove.column-1][nextMove.row-1]->changeExistance(true);
+                    histPiece = nullptr;
+                    pieceNum += 1;
                 }
             }
             return false;

@@ -1,6 +1,6 @@
 #include "pawn.hpp"
 
-bool Pawn::makeMove(Position nextMove, std::vector<std::vector<std::shared_ptr<Chessman>>>& board, int& flagQueen)
+bool Pawn::makeMove(Position nextMove, std::vector<std::vector<std::shared_ptr<Chessman>>>& board, int& flagQueen, int& pieceNum)
 {
     if ( board[nextMove.column][nextMove.row] != nullptr )
     {  
@@ -8,7 +8,6 @@ bool Pawn::makeMove(Position nextMove, std::vector<std::vector<std::shared_ptr<C
         {
             return false;
         }
-        
     }
 
     if (checkIndexValidity(nextMove.column, nextMove.row))
@@ -41,15 +40,18 @@ bool Pawn::makeMove(Position nextMove, std::vector<std::vector<std::shared_ptr<C
                 flagQueen = 1;
             }
             return true;
-        } else if ( checkJumping(nextMove, board, flagQueen))
+        } else if ( checkMaxJump(nextMove, board) )
         {
-            position = nextMove;
-            if((nextMove.row == 7 && white == true)
-                || (nextMove.row == 0 && white == false))
+            if ( checkJumping(nextMove, board, flagQueen, pieceNum) )
             {
-                flagQueen = 1;
+                position = nextMove;
+                if((nextMove.row == 7 && white == true)
+                    || (nextMove.row == 0 && white == false))
+                {
+                    flagQueen = 1;
+                }
+                return true;
             }
-            return true;
         }  
     }
 
