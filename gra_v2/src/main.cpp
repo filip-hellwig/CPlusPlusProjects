@@ -12,8 +12,8 @@ int main(int argc, char* argv[])
     Position start_pos, end_pos;
     std::shared_ptr<Chessman> changing;
     Board b;
-    std::shared_ptr<Human> p1 = std::make_shared<Human> (true);
-    std::shared_ptr<Human> p2 = std::make_shared<Human> (false);
+    std::shared_ptr<Human> p1 = std::make_shared<Human> (true, b.getBoard());
+    std::shared_ptr<Human> p2 = std::make_shared<Human> (false, b.getBoard());
     std::shared_ptr<Player> currentTurn, opponent;
     char x;
     int y;
@@ -51,12 +51,14 @@ int main(int argc, char* argv[])
                     if (flagQueen == 1)
                     {
                         b.changePiece(end_pos.column, end_pos.row) = std::make_shared<Queen>(end_pos.column, end_pos.row, currentTurn->isWhiteSide());
+                        flagQueen = 0;
                     }
 
-                    if (opponent->getPieceNum() == 0)
+                    if (opponent->getPieceNum() == 0
+                        || opponent->isMoveImpossible(b.getBoard()))
                     { 
                         break; 
-                    }
+                    } 
 
                     if (p1 == currentTurn)
                     {

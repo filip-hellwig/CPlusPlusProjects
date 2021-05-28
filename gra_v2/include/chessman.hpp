@@ -6,7 +6,6 @@
 #include <vector>
 #include <memory>
 #include "position.hpp"
-class Player;
 
 class Chessman
 {
@@ -17,7 +16,8 @@ class Chessman
     
     public:
         virtual bool makeMove(Position nextMove, std::vector<std::vector<std::shared_ptr<Chessman>>>& board,
-                                int& flagQueen, int& pieceNum) = 0;
+                                int& flagQueen, int& pieceNum ) = 0;
+        virtual bool checkMove(Position nextMove, std::vector<std::vector<std::shared_ptr<Chessman>>>& board) = 0;                           
         virtual std::string name() = 0;
 
 
@@ -35,7 +35,7 @@ class Chessman
             {
                 return false;
             }
-            if (column > 7 || row < 0)
+            if (column > 7 || column < 0)
             {
                 return false;
             }
@@ -48,52 +48,43 @@ class Chessman
         {
             existance = b;
         }
-
-        /* int flagQueen(int row)
+        void changePosition(Position pos)
         {
-            if((row == 7 && white == true)
-                || (row == 0 && white == false))
+            position = pos;
+        }
+
+
+
+        bool checkMaxJumpShort(int column, int row, int column2, int row2,
+                                std::vector<std::vector<std::shared_ptr<Chessman>>>& board)
+        {
+            Position pos;
+
+            if (checkIndexValidity(column2, row2))
             {
-                static int c = 1;
-            } else
-            {
-                static int c = 0;
+                if(board[column][row] != nullptr
+                    && board[column][row]->getWhite() != white
+                    && (board[column2][row2] == nullptr
+                    || (board[column2][row2] != nullptr
+                    && pos.setPostition(column2, row2) == position)))
+                { return true; }
             }
-            return 0;
-        } */
+
+            return false;
+        }
 
         bool checkMaxJump(Position nextMove, std::vector<std::vector<std::shared_ptr<Chessman>>>& board)
         {
             int i = 0;
             Position pos;
 
-            if (checkIndexValidity(nextMove.column+2, nextMove.row+2)
-                && board[nextMove.column+1][nextMove.row+1] != nullptr
-                && board[nextMove.column+1][nextMove.row+1]->getWhite() != white
-                && (board[nextMove.column+2][nextMove.row+2] == nullptr
-                || (board[nextMove.column+2][nextMove.row+2] != nullptr
-                && pos.setPostition(nextMove.column+2, nextMove.row+2) == position)))
+            if (checkMaxJumpShort(nextMove.column+1, nextMove.row+1, nextMove.column+2, nextMove.row+2, board))
             { i++; }
-            if (checkIndexValidity(nextMove.column-2, nextMove.row+2)
-                && board[nextMove.column-1][nextMove.row+1] != nullptr
-                && board[nextMove.column-1][nextMove.row+1]->getWhite() != white
-                && (board[nextMove.column-2][nextMove.row+2] == nullptr
-                || (board[nextMove.column-2][nextMove.row+2] != nullptr
-                && pos.setPostition(nextMove.column-2, nextMove.row+2) == position)))
+            if (checkMaxJumpShort(nextMove.column-1, nextMove.row+1, nextMove.column-2, nextMove.row+2, board))
             { i++; }
-            if (checkIndexValidity(nextMove.column+2, nextMove.row-2)
-                && board[nextMove.column+1][nextMove.row-1] != nullptr
-                && board[nextMove.column+1][nextMove.row-1]->getWhite() != white
-                && (board[nextMove.column+2][nextMove.row-2] == nullptr
-                || (board[nextMove.column+2][nextMove.row-2] != nullptr
-                && pos.setPostition(nextMove.column+2, nextMove.row-2) == position)))
+            if (checkMaxJumpShort(nextMove.column+1, nextMove.row-1, nextMove.column+2, nextMove.row-2, board))
             { i++; }
-            if (checkIndexValidity(nextMove.column-2, nextMove.row-2)
-                && board[nextMove.column-1][nextMove.row-1] != nullptr
-                && board[nextMove.column-1][nextMove.row-1]->getWhite() != white
-                && (board[nextMove.column-2][nextMove.row-2] == nullptr
-                || (board[nextMove.column-2][nextMove.row-2] != nullptr
-                && pos.setPostition(nextMove.column-2, nextMove.row-2) == position)))
+            if (checkMaxJumpShort(nextMove.column-1, nextMove.row-1, nextMove.column-2, nextMove.row-2, board))
             { i++; }
 
             if (i > 1) { return false; }
@@ -101,160 +92,129 @@ class Chessman
         }
 
 
-        bool checkJumping(Position nextMove, std::vector<std::vector<std::shared_ptr<Chessman>>>& board, int& flagQueen, int& pieceNum)
+
+
+        bool makeJumpShort(int column, int row, int column2, int row2,
+                                std::vector<std::vector<std::shared_ptr<Chessman>>>& board,
+                                int& flagQueen, int& pieceNum)
         {
             Position newPosition;
             std::shared_ptr<Chessman> histPiece;
 
-            if (checkIndexValidity(nextMove.column+2, nextMove.row+2)
-                && board[nextMove.column+1][nextMove.row+1] != nullptr
-                && board[nextMove.column+1][nextMove.row+1]->getWhite() != white)
+            if (checkIndexValidity(column2, row2))
             {
-                if (board[nextMove.column+2][nextMove.row+2] != nullptr)
+                if(board[column][row] != nullptr
+                && board[column][row]->getWhite() != white)
                 {
-                    if (newPosition.setPostition(nextMove.column+2, nextMove.row+2) == position)
+                    if (board[column2][row2] != nullptr)
                     {
-                        board[nextMove.column+1][nextMove.row+1]->changeExistance(false);
-                        board[nextMove.column+1][nextMove.row+1] = nullptr;
-                        pieceNum -= 1;
-                        return true;
-                    }
-                } else 
-                {
-                    board[nextMove.column+1][nextMove.row+1]->changeExistance(false);
-                    histPiece = board[nextMove.column+1][nextMove.row+1];
-                    board[nextMove.column+1][nextMove.row+1] = nullptr;
-                    pieceNum -= 1;
-
-                    
-                    if(checkJumping(newPosition.setPostition(nextMove.column+2, nextMove.row+2), board, flagQueen, pieceNum))
-                    {
-                        if((nextMove.row+2 == 7 && white == true)
-                            || (nextMove.row+2 == 0 && white == false))
+                        if (newPosition.setPostition(column2, row2) == position)
                         {
-                            flagQueen = 1;
+                            board[column][row]->changeExistance(false);
+                            board[column][row] = nullptr;
+                            pieceNum += -1;
+                            return true;
                         }
-                        return true;
-                    }
-
-                    board[nextMove.column+1][nextMove.row+1] = histPiece;
-                    board[nextMove.column+1][nextMove.row+1]->changeExistance(true);
-                    histPiece = nullptr;
-                    pieceNum += 1;
-                }
-            }
-            if (checkIndexValidity(nextMove.column-2, nextMove.row+2)
-                && board[nextMove.column-1][nextMove.row+1] != nullptr
-                && board[nextMove.column-1][nextMove.row+1]->getWhite() != white)
-            {
-                if (board[nextMove.column-2][nextMove.row+2] != nullptr)
-                {
-                    if (newPosition.setPostition(nextMove.column-2, nextMove.row+2) == position)
+                    } else 
                     {
-                        board[nextMove.column-1][nextMove.row+1]->changeExistance(false);
-                        board[nextMove.column-1][nextMove.row+1] = nullptr;
-                        pieceNum -= 1;
-                        return true;
-                    }
-                } else 
-                {
-                    board[nextMove.column-1][nextMove.row+1]->changeExistance(false);
-                    histPiece = board[nextMove.column-1][nextMove.row+1];
-                    board[nextMove.column-1][nextMove.row+1] = nullptr;
-                    pieceNum -= 1;
-
-                    
-                    if(checkJumping(newPosition.setPostition(nextMove.column-2, nextMove.row+2), board, flagQueen, pieceNum))
-                    {
-                        if((nextMove.row+2 == 7 && white == true)
-                            || (nextMove.row+2 == 0 && white == false))
-                        {
-                            flagQueen = 1;
-                        }
-                        return true;
-                    }
-
-                    board[nextMove.column-1][nextMove.row+1] = histPiece;
-                    board[nextMove.column-1][nextMove.row+1]->changeExistance(true);
-                    histPiece = nullptr;
-                    pieceNum += 1;
-                }
-            }
-            if (checkIndexValidity(nextMove.column+2, nextMove.row-2)
-                && board[nextMove.column+1][nextMove.row-1] != nullptr
-                && board[nextMove.column+1][nextMove.row-1]->getWhite() != white)
-            {
-                if (board[nextMove.column+2][nextMove.row-2] != nullptr)
-                {
-                    if (newPosition.setPostition(nextMove.column+2, nextMove.row-2) == position)
-                    {
-                        board[nextMove.column+1][nextMove.row-1]->changeExistance(false);
-                        board[nextMove.column+1][nextMove.row-1] = nullptr;
-                        pieceNum -= 1;
-                        return true;
+                        board[column][row]->changeExistance(false);
+                        histPiece = board[column][row];
+                        board[column][row] = nullptr;
+                        pieceNum += -1;
                         
-                    }
-                } else 
-                {
-                    board[nextMove.column+1][nextMove.row-1]->changeExistance(false);
-                    histPiece = board[nextMove.column-1][nextMove.row+1];
-                    board[nextMove.column+1][nextMove.row-1] = nullptr;
-                    pieceNum -= 1;
-
-                    
-                    if(checkJumping(newPosition.setPostition(nextMove.column+2, nextMove.row-2), board, flagQueen, pieceNum))
-                    {
-                        if((nextMove.row-2 == 7 && white == true)
-                            || (nextMove.row-2 == 0 && white == false))
+                        if(makeJump(newPosition.setPostition(column2, row2), board, flagQueen, pieceNum))
                         {
-                            flagQueen = 1;
+                            if((row2 == 7 && white == true)
+                                || (row2 == 0 && white == false))
+                            {
+                                flagQueen = 1;
+                            }
+                            return true;
                         }
-                        return true;
-                    }
 
-                    board[nextMove.column+1][nextMove.row-1] = histPiece;
-                    board[nextMove.column+1][nextMove.row-1]->changeExistance(true);
-                    histPiece = nullptr;
-                    pieceNum += 1;
+                        board[column][row] = histPiece;
+                        board[column][row]->changeExistance(true);
+                        histPiece = nullptr;
+                        pieceNum += 1;
+                    }
                 }
             }
-            if (checkIndexValidity(nextMove.column-2, nextMove.row-2)
-                && board[nextMove.column-1][nextMove.row-1] != nullptr
-                && board[nextMove.column-1][nextMove.row-1]->getWhite() != white)
+            return false;
+        }
+
+        bool makeJump(Position nextMove, std::vector<std::vector<std::shared_ptr<Chessman>>>& board,
+                            int& flagQueen, int& pieceNum)
+        {
+            if(makeJumpShort(nextMove.column+1, nextMove.row+1, nextMove.column+2, nextMove.row+2,
+                                    board, flagQueen, pieceNum))
+            { return true; }
+            if(makeJumpShort(nextMove.column-1, nextMove.row+1, nextMove.column-2, nextMove.row+2,
+                                    board, flagQueen, pieceNum))
+            { return true; }
+            if(makeJumpShort(nextMove.column+1, nextMove.row-1, nextMove.column+2, nextMove.row-2,
+                                    board, flagQueen, pieceNum))
+            { return true; }
+            if(makeJumpShort(nextMove.column-1, nextMove.row-1, nextMove.column-2, nextMove.row-2,
+                                    board, flagQueen, pieceNum))
+            { return true; }
+            return false;
+        }
+
+
+
+        bool checkJumpShort(int column, int row, int column2, int row2,
+                                std::vector<std::vector<std::shared_ptr<Chessman>>>& board)
+        {
+            Position newPosition;
+            std::shared_ptr<Chessman> histPiece;
+
+            if (checkIndexValidity(column2, row2)
+                && board[column][row] != nullptr
+                && board[column][row]->getWhite() != white)
             {
-                if (board[nextMove.column-2][nextMove.row-2] != nullptr)
+                if (board[column2][row2] != nullptr)
                 {
-                    if (newPosition.setPostition(nextMove.column-2, nextMove.row-2) == position)
+                    if (newPosition.setPostition(column2, row2) == position)
                     {
-                        board[nextMove.column-1][nextMove.row-1]->changeExistance(false);
-                        board[nextMove.column-1][nextMove.row-1] = nullptr;
-                        pieceNum -= 1;
                         return true;
                     }
                 } else 
                 {
-                    board[nextMove.column-1][nextMove.row-1]->changeExistance(false);
-                    histPiece = board[nextMove.column-1][nextMove.row-1];
-                    board[nextMove.column-1][nextMove.row-1] = nullptr;
-                    pieceNum -= 1;
-
+                    board[column][row]->changeExistance(false);
+                    histPiece = board[column][row];
+                    board[column][row] = nullptr;
                     
-                    if(checkJumping(newPosition.setPostition(nextMove.column-2, nextMove.row-2), board, flagQueen, pieceNum))
+                    if(checkJump(newPosition.setPostition(column2, row2), board))
                     {
-                        if((nextMove.row-2 == 7 && white == true)
-                            || (nextMove.row-2 == 0 && white == false))
-                        {
-                            flagQueen = 1;
-                        }
+                        board[column][row] = histPiece;
+                        board[column][row]->changeExistance(true);
+                        histPiece = nullptr;
+
                         return true;
                     }
 
-                    board[nextMove.column-1][nextMove.row-1] = histPiece;
-                    board[nextMove.column-1][nextMove.row-1]->changeExistance(true);
+                    board[column][row] = histPiece;
+                    board[column][row]->changeExistance(true);
                     histPiece = nullptr;
-                    pieceNum += 1;
                 }
             }
+            return false;
+        }
+
+        bool checkJump(Position nextMove, std::vector<std::vector<std::shared_ptr<Chessman>>>& board)
+        {
+            if(checkJumpShort(nextMove.column+1, nextMove.row+1, nextMove.column+2, nextMove.row+2,
+                                    board))
+            { return true; }
+            if(checkJumpShort(nextMove.column-1, nextMove.row+1, nextMove.column-2, nextMove.row+2,
+                                    board))
+            { return true; }
+            if(checkJumpShort(nextMove.column+1, nextMove.row-1, nextMove.column+2, nextMove.row-2,
+                                    board))
+            { return true; }
+            if(checkJumpShort(nextMove.column-1, nextMove.row-1, nextMove.column-2, nextMove.row-2,
+                                    board))
+            { return true; }
             return false;
         }
 

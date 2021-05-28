@@ -38,6 +38,28 @@ Position Position::translateMove(char column, int row)
     return temp;
 }
 
+std::vector<Position> Position::allPostitons()
+{
+    std::vector<Position> all;
+    Position pos;
+    for(int i = 0; i < 8; i+=2)
+    {
+        for(int j = 0; j < 8; j+=2)
+        {
+            all.push_back(pos.setPostition(j, i));
+        }
+    }
+    for(int i = 1; i < 8; i+=2)
+    {
+        for(int j = 1; j < 8; j+=2)
+        {
+            all.push_back(pos.setPostition(j, i));
+        }
+    }
+    
+    return all;
+}
+
 bool Position::operator==(Position pos)
 {
     if (column == pos.column
