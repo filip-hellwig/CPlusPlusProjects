@@ -50,7 +50,7 @@ void Gui::execGame()
                     gameIsRunning = false;
                     break;
                 case SDL_MOUSEBUTTONDOWN:
-                    mousebuttondown(event);
+                    mouseButtonDown(event);
                     break;
             }
         }

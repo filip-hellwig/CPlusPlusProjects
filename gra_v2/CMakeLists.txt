@@ -13,5 +13,5 @@ add_library(game_lib src/pawn.cpp src/queen.cpp src/board.cpp src/position.cpp s
 
 add_executable(chess_game
         src/main.cpp)
-target_link_libraries(chess_game PRIVATE SDL2::Main SDL2::TTF)
+target_link_libraries(chess_game PRIVATE game_lib SDL2::Main SDL2::TTF)
 target_include_directories(game_lib PUBLIC include)
