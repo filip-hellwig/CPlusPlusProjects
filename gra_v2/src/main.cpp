@@ -3,13 +3,26 @@
 #include "board.hpp"
 #include "human.hpp"
 #include "computer.hpp"
+#include "gui.hpp"
 
 #include <iostream>
 
 
 int main(int argc, char* argv[])
 {
-    Position start_pos, end_pos;
+    Gui gui;
+
+    if(!gui.init())
+    {
+        std::cerr << "Game initialization failed\n";
+        return EXIT_FAILURE;
+    }
+
+    gui.execGame();
+
+    return EXIT_SUCCESS;
+
+    /* Position start_pos, end_pos;
     std::shared_ptr<Chessman> changing;
     Board b;
     std::shared_ptr<Human> p1 = std::make_shared<Human> (true, b.getBoard());
@@ -84,8 +97,5 @@ int main(int argc, char* argv[])
         }
     }
 
-    b.showBoard();
-
-
-    return 0;
+    b.showBoard(); */
 }
