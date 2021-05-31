@@ -3,7 +3,15 @@
 
 #include <SDL.h>
 #include <SDL_ttf.h>
+#include <unistd.h>
 #include <iostream>
+
+#include "pawn.hpp"
+#include "queen.hpp"
+#include "board.hpp"
+#include "human.hpp"
+#include "computer.hpp"
+
 
 class Gui
 {
@@ -12,8 +20,16 @@ class Gui
     void execGame();
 
   private:
-    void draw();
-    void mouseButtonDown(SDL_Event& event);
+    void draw(std::vector<std::vector<std::shared_ptr<Chessman>>>& board);
+    void initBoard();
+    void generateBoard();
+    void generateChessman(int column, int row, std::vector<std::vector<std::shared_ptr<Chessman>>>& board);
+    void drawPick(Position& pos, std::vector<std::vector<std::shared_ptr<Chessman>>>& board);
+    void unDrawPick(Position& pos, std::vector<std::vector<std::shared_ptr<Chessman>>>& board);
+    void mouseButtonDown(SDL_Event& event, Position& begin, Position& end, std::vector<std::vector<std::shared_ptr<Chessman>>>& board, bool white);
+    void returnDown(Position& begin, Position& end, Board& b, int& flagQueen,
+                    std::shared_ptr<Player>& currentTurn, std::shared_ptr<Player>& opponent);
+    void pickTile(int y, int x, Position& pos);
 
     bool gameIsRunning = false;
 
@@ -23,10 +39,14 @@ class Gui
 
     SDL_Surface* white_pawn = nullptr;
     SDL_Surface* black_pawn = nullptr;
+    SDL_Surface* white_queen = nullptr;
+    SDL_Surface* black_queen = nullptr;
     SDL_Surface* background = nullptr;
     SDL_Surface* white_bg = nullptr;
     SDL_Surface* dark_tile = nullptr;
     SDL_Surface* pale_tile = nullptr;
+    SDL_Surface* pale_tile_pick = nullptr;
+    SDL_Surface* dark_tile_pick = nullptr;
 };
 
 #endif /* GAME_GUI_HPP_ */

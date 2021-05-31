@@ -15,7 +15,6 @@ class Board
 
     public:
         Board();
-        void showBoard();
         std::vector<std::vector<std::shared_ptr<Chessman>>>& getBoard();
         std::shared_ptr<Chessman>& changePiece(int column, int row);
 };

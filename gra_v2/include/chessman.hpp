@@ -13,12 +13,13 @@ class Chessman
         Position position; 
         bool existance;
         bool white;
+        bool queen;
     
     public:
         virtual bool makeMove(Position nextMove, std::vector<std::vector<std::shared_ptr<Chessman>>>& board,
                                 int& flagQueen, int& pieceNum ) = 0;
         virtual bool checkMove(Position nextMove, std::vector<std::vector<std::shared_ptr<Chessman>>>& board) = 0;                           
-        virtual std::string name() = 0;
+        virtual bool isQueen() = 0;
 
 
         Chessman(int column, int row, bool isWhite)

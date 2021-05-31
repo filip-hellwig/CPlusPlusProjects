@@ -100,13 +100,7 @@ bool Pawn::checkMove(Position nextMove, std::vector<std::vector<std::shared_ptr<
 }
 
 
-std::string Pawn::name()
+bool Pawn::isQueen()
 {
-    if(white)
-    {
-        return "b_P";
-    } else
-    {
-        return "c_P";
-    }
+    return false;
 }

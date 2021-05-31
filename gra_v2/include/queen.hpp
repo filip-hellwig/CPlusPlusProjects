@@ -11,7 +11,7 @@ class Queen : public Chessman
         bool makeMove(Position nextMove, std::vector<std::vector<std::shared_ptr<Chessman>>>& board,
                         int& flagQueen, int& pieceNum) override;
         bool checkMove(Position nextMove, std::vector<std::vector<std::shared_ptr<Chessman>>>& board) override;
-        std::string name() override;
+        bool isQueen() override;
 };
 
 #endif

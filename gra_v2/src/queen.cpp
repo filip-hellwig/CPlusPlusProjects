@@ -142,13 +142,7 @@ bool Queen::checkMove(Position nextMove, std::vector<std::vector<std::shared_ptr
 }
 
 
-std::string Queen::name()
+bool Queen::isQueen()
 {
-    if(white)
-    {
-        return "b_Q";
-    } else
-    {
-        return "c_Q";
-    }
+    return true;
 }
