@@ -25,6 +25,7 @@ bool Gui::init()
     surface = SDL_GetWindowSurface(window);
 
     font = TTF_OpenFont("../data/font.ttf", 100);
+    fontSmall = TTF_OpenFont("../data/font.ttf", 36);
     white_pawn = SDL_LoadBMP("../data/white.bmp");
     black_pawn = SDL_LoadBMP("../data/black.bmp");
     white_queen = SDL_LoadBMP("../data/white_queen.bmp");
@@ -36,7 +37,7 @@ bool Gui::init()
     pale_tile_pick = SDL_LoadBMP("../data/pale_tile_pick.bmp");
     dark_tile_pick = SDL_LoadBMP("../data/dark_tile_pick.bmp");
 
-    return surface && font && white_pawn && black_pawn && white_queen 
+    return surface && font && white_pawn && black_pawn && white_queen && fontSmall 
             && black_queen && background && white_bg && pale_tile && dark_tile && pale_tile_pick && dark_tile_pick;
 }
 
@@ -44,11 +45,13 @@ bool Gui::init()
 
 void Gui::execGame()
 {
-    Position begin_pos(-1,-1), end_pos(-1,-1);
+    Position begin_pos(-1,-1), end_pos(-1,-1), control(-1,-1), puppetPos;
     Board b;
     std::shared_ptr<Human> p1 = std::make_shared<Human> (true, b.getBoard());
     std::shared_ptr<Human> p2 = std::make_shared<Human> (false, b.getBoard());
-    std::shared_ptr<Player> currentTurn, opponent;
+    std::shared_ptr<Computer> p3 = std::make_shared<Computer> (false, b.getBoard());
+    std::shared_ptr<Player> currentTurn, opponent, additional;
+    Pawn puppetPawn(-1,-1,false);
     int flagQueen = 0;
 
 
@@ -63,35 +66,107 @@ void Gui::execGame()
         currentTurn = p2;
         opponent = p1;
     }
-    
+    additional = p3;
 
     initBoard();
     draw(b.getBoard());
 
     while(gameIsRunning)
     {
-        SDL_Event event;
-        while(SDL_PollEvent(&event))
+        if(currentTurn->isHumanPlayer())
         {
-            switch(event.type)
+            SDL_Event event;
+            while(SDL_PollEvent(&event))
             {
-                case SDL_QUIT:
-                    gameIsRunning = false;
-                    break;
-                case SDL_MOUSEBUTTONDOWN:
-                    mouseButtonDown(event, begin_pos, end_pos, b.getBoard(), currentTurn->isWhiteSide());
-                    std::cout << begin_pos.column << begin_pos.row << end_pos.column << end_pos.row << "\n";
-                    break;
-                case SDL_KEYDOWN:
-                    switch(event.key.keysym.sym)
-                    {
-                        case SDLK_RETURN:
-                        std::cout << "Return\n";
-                        returnDown(begin_pos, end_pos, b, flagQueen, currentTurn, opponent);
-                        draw(b.getBoard());
+                switch(event.type)
+                {
+                    case SDL_QUIT:
+                        gameIsRunning = false;
                         break;
-                    }
+                    case SDL_MOUSEBUTTONDOWN:
+                        mouseButtonDown(event, begin_pos, end_pos, b, currentTurn->isWhiteSide(), currentTurn, opponent, additional);
+                        break;
+                    case SDL_KEYDOWN:
+                        switch(event.key.keysym.sym)
+                        {
+                            case SDLK_RETURN:
+                            returnDown(begin_pos, end_pos, b, flagQueen, currentTurn, opponent);
+                            draw(b.getBoard());
+                            break;
+                        }
+                }
             }
+        } else
+        {   
+            int alg;
+            alg = puppetPawn.minmax(b.getBoard(), currentTurn->getPieceNum(), opponent->getPieceNum(), currentTurn->getAllPieces(),
+                            opponent->getAllPieces(), 3, true, begin_pos, end_pos, puppetPos);
+
+            if(alg != -10)
+            {
+                b.getBoard()[begin_pos.column][begin_pos.row]->makeMove(end_pos, b.getBoard(), flagQueen, opponent->getPieceNum());
+                
+                std::swap(b.changePiece(end_pos.column, end_pos.row), b.changePiece(begin_pos.column, begin_pos.row));
+
+                if (flagQueen == 1)
+                {
+                    b.changePiece(end_pos.column, end_pos.row) = std::make_shared<Queen>(end_pos.column, end_pos.row, currentTurn->isWhiteSide());
+                    for(int i = 0; i < 8; i++)
+                    {
+                        if(currentTurn->getAllPieces()[i]->getPosition() == end_pos)
+                        {
+                            currentTurn->getAllPieces()[i] = b.getBoard()[end_pos.column][end_pos.row];
+                        }
+                    }
+                    flagQueen = 0;
+                }
+            }
+
+            if (opponent->getPieceNum() == 0
+                || opponent->isMoveImpossible(b.getBoard())
+                || alg == -10)
+            {
+                draw(b.getBoard());
+                SDL_Color fontColor = {255, 0, 0};
+                SDL_Surface* text1 = nullptr;
+                if (opponent->isWhiteSide() == true)
+                {
+                    text1 = TTF_RenderText_Blended(font, "Black", fontColor);
+                } else
+                {
+                    text1 = TTF_RenderText_Blended(font, "White", fontColor);
+                }
+                SDL_Surface* text2 = TTF_RenderText_Blended(font, "Wins!", fontColor);
+
+                SDL_Rect textRect1 = {400, 400, 200, 100};
+                SDL_Rect textRect2 = {400, 500, 200, 100};
+                SDL_BlitSurface(text1, nullptr, surface, &textRect1);
+                SDL_BlitSurface(text2, nullptr, surface, &textRect2);
+                SDL_FreeSurface(text1);
+                SDL_FreeSurface(text2);
+                SDL_UpdateWindowSurface(window);
+                sleep(5);
+                
+                if(currentTurn->isWhiteSide() == false)
+                {
+                    std::swap(currentTurn, opponent);
+                }
+
+                b.resetBoard();
+                currentTurn->resetPlayer(b.getBoard());
+                opponent->resetPlayer(b.getBoard());
+
+                if(currentTurn->isWhiteSide())
+                {
+                    std::swap(currentTurn, opponent);
+                }
+            } 
+
+            std::swap(currentTurn, opponent);
+            draw(b.getBoard());
+            begin_pos = control;
+            end_pos = control;
+            
         }
     }
 
@@ -192,7 +267,8 @@ void Gui::generateChessman(int column, int row, std::vector<std::vector<std::sha
     }
 }
 
-void Gui::mouseButtonDown(SDL_Event& event, Position& begin, Position& end, std::vector<std::vector<std::shared_ptr<Chessman>>>& board, bool white)
+void Gui::mouseButtonDown(SDL_Event& event, Position& begin, Position& end, Board& b,
+                            bool white, std::shared_ptr<Player>& currentTurn, std::shared_ptr<Player>& opponent, std::shared_ptr<Player>& additional)
 {
     Position control(-1,-1);
     Position check;
@@ -204,37 +280,38 @@ void Gui::mouseButtonDown(SDL_Event& event, Position& begin, Position& end, std:
             case SDL_BUTTON_LEFT:
                 if(begin == control)
                 {
+                    pickButton(event.button.y, event.button.x, begin, end, b, currentTurn, opponent, additional);
                     pickTile(event.button.y, event.button.x, begin);
 
                     if(begin != control)
                     {
-                        if(board[begin.column][begin.row] == nullptr)
+                        if(b.getBoard()[begin.column][begin.row] == nullptr)
                         {
                             begin = control;    
-                        } else if(board[begin.column][begin.row]->getWhite() != white)
+                        } else if(b.getBoard()[begin.column][begin.row]->getWhite() != white)
                         {
                             begin = control;
                         } else
                         {
-                            drawPick(begin, board);
+                            drawPick(begin, b.getBoard());
                         }
                     }
        
                 } else if (end == control)
                 {
                     pickTile(event.button.y, event.button.x, end);
-                    drawPick(end, board);
+                    drawPick(end, b.getBoard());
                 }
                 break;
             case SDL_BUTTON_RIGHT:
                 pickTile(event.button.y, event.button.x, check);
                 if(check == begin)
                 {
-                    unDrawPick(begin, board);
+                    unDrawPick(begin, b.getBoard());
                     begin = control;
                 } else if(check == end)
                 {
-                    unDrawPick(end, board);
+                    unDrawPick(end, b.getBoard());
                     end = control;
                 }
                 break;
@@ -256,12 +333,20 @@ void Gui::returnDown(Position& begin, Position& end, Board& b, int& flagQueen,
             if (flagQueen == 1)
             {
                 b.changePiece(end.column, end.row) = std::make_shared<Queen>(end.column, end.row, currentTurn->isWhiteSide());
+                for(int i = 0; i < 8; i++)
+                {
+                    if(currentTurn->getAllPieces()[i]->getPosition() == end)
+                    {
+                        currentTurn->getAllPieces()[i] = b.getBoard()[end.column][end.row];
+                    }
+                }
                 flagQueen = 0;
             }
 
             if (opponent->getPieceNum() == 0
                 || opponent->isMoveImpossible(b.getBoard()))
-            { 
+            {
+                draw(b.getBoard());
                 SDL_Color fontColor = {255, 0, 0};
                 SDL_Surface* text1 = nullptr;
                 if (opponent->isWhiteSide() == true)
@@ -281,6 +366,20 @@ void Gui::returnDown(Position& begin, Position& end, Board& b, int& flagQueen,
                 SDL_FreeSurface(text2);
                 SDL_UpdateWindowSurface(window);
                 sleep(5);
+
+                if(currentTurn->isWhiteSide() == false)
+                {
+                    std::swap(currentTurn, opponent);
+                }
+
+                b.resetBoard();
+                currentTurn->resetPlayer(b.getBoard());
+                opponent->resetPlayer(b.getBoard());
+
+                if(currentTurn->isWhiteSide())
+                {
+                    std::swap(currentTurn, opponent);
+                }
             } 
 
             std::swap(currentTurn, opponent);
@@ -288,6 +387,73 @@ void Gui::returnDown(Position& begin, Position& end, Board& b, int& flagQueen,
         begin = control;
         end = control;
 
+    }
+}
+
+void Gui::pickButton(int y, int x, Position& begin, Position& end, Board& b,
+                        std::shared_ptr<Player>& currentTurn, std::shared_ptr<Player>& opponent, std::shared_ptr<Player>& additional)
+{
+    if (122 <= y && y < 158
+        && 886 <= x && x < 1160)
+    {
+        Position control(-1,-1);
+
+        if(currentTurn->isWhiteSide() == false)
+        {
+            std::swap(currentTurn, opponent);
+        }
+
+        begin = control;
+        end = control;
+        b.resetBoard();
+        currentTurn->resetPlayer(b.getBoard());
+        opponent->resetPlayer(b.getBoard());
+        draw(b.getBoard());
+    }
+
+    if (222 <= y && y < 258
+        && 886 <= x && x < 1260
+        && (opponent->isHumanPlayer() == false
+        || currentTurn->isHumanPlayer() == false))
+    {
+        Position control(-1,-1);
+
+        if(currentTurn->isWhiteSide() == false)
+        {
+            std::swap(currentTurn, opponent);
+        }
+
+        begin = control;
+        end = control;
+        b.resetBoard();
+        currentTurn->resetPlayer(b.getBoard());
+        opponent->nullPlayer();
+        additional->resetPlayer(b.getBoard());
+        std::swap(opponent, additional);
+
+        draw(b.getBoard());
+    }
+
+    if (322 <= y && y < 358
+        && 886 <= x && x < 1260
+        && currentTurn->isHumanPlayer() == true
+        && opponent->isHumanPlayer() == true)
+    {
+        Position control(-1,-1);
+
+        if(currentTurn->isWhiteSide() == false)
+        {
+            std::swap(currentTurn, opponent);
+        }
+
+        begin = control;
+        end = control;
+        b.resetBoard();
+        currentTurn->resetPlayer(b.getBoard());
+        opponent->nullPlayer();
+        additional->resetPlayer(b.getBoard());
+        std::swap(opponent, additional);
+        draw(b.getBoard());
     }
 }
 
@@ -314,16 +480,32 @@ void Gui::pickTile(int y, int x, Position& pos)
         else if (722 <= x && x < 822) { pos.column = 6; }
         else if (822 <= x && x < 922) { pos.column = 7; }
     }
-    std::cout << pos.column << " " << pos.row << "\n";
 }
 
 void Gui::initBoard()
 {
+    
     SDL_Rect imageRect = {0, 0, 1280, 1024};
     SDL_BlitSurface(background, nullptr, surface, &imageRect);
 
     SDL_Rect imageRect2 = {112, 112, 824, 824};
     SDL_BlitSurface(white_bg, nullptr, surface, &imageRect2);
+
+    SDL_Color fontColor = {255, 255, 255};
+    SDL_Surface* text = TTF_RenderText_Blended(fontSmall, "New game", fontColor);
+    SDL_Rect textRect = {986, 122, 200, 36};
+    SDL_BlitSurface(text, nullptr, surface, &textRect);
+    SDL_FreeSurface(text);
+
+    SDL_Surface* text2 = TTF_RenderText_Blended(fontSmall, "Play with human", fontColor);
+    SDL_Rect textRect2 = {986, 222, 300, 36};
+    SDL_BlitSurface(text2, nullptr, surface, &textRect2);
+    SDL_FreeSurface(text2);
+
+    SDL_Surface* text3 = TTF_RenderText_Blended(fontSmall, "Play with AI", fontColor);
+    SDL_Rect textRect3 = {986, 322, 300, 36};
+    SDL_BlitSurface(text3, nullptr, surface, &textRect3);
+    SDL_FreeSurface(text3);
 
     generateBoard();
 
