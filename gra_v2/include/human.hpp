@@ -3,9 +3,12 @@
 
 #include "player.hpp"
 
+/* Klasa wyspecializowana dla przeciwnika będącego człowiekiem */
 class Human : public Player 
 {  
     public:
+        /* Konstruktor parametryczny klasy Human. Przypisuje graczowi kolor, 
+            oraz odpowiednie figury z planszy. */
         Human(bool isWhiteSide, std::vector<std::vector<std::shared_ptr<Chessman>>> board)
         {
             whiteSide = isWhiteSide;
@@ -16,7 +19,7 @@ class Human : public Player
                 allPieces.push_back(nullptr);
             }
 
-            if (whiteSide == true)
+            if (whiteSide)
             {
                 allPieces[0] = board[0][0];
                 allPieces[1] = board[1][1];
@@ -36,18 +39,10 @@ class Human : public Player
                 allPieces[5] = board[5][7];
                 allPieces[6] = board[6][6];
                 allPieces[7] = board[7][7];
-
-                /* allPieces[0] = board[0][6];
-                allPieces[1] = board[1][7];
-                allPieces[2] = board[2][6];
-                allPieces[3] = board[3][7];
-                allPieces[4] = board[2][2];
-                allPieces[5] = board[2][4];
-                allPieces[6] = board[4][4];
-                allPieces[7] = board[6][6]; */
             }
         }
 
+        /* Operator porównania dwóch graczy */
         bool operator==(Player p)
         {
             if (whiteSide == p.isWhiteSide())

@@ -7,12 +7,21 @@
 
 class Chessman;
 
+
+/* Klasa definiuje gracza */
 class Player 
 {
     protected: 
+        /* Czy gracz gra białymi */
         bool whiteSide;
+
+        /* Czy gracz jest człowiekiem */
         bool humanPlayer;
+
+        /* Ilość aktywnych figur gracza */
         int pieceNum = 8;
+
+        /* Wektor przechowujący wskaźniki na wszystkie figury gracza */
         std::vector<std::shared_ptr<Chessman>> allPieces;
     
     public:
@@ -20,22 +29,24 @@ class Player
         {
             return whiteSide;
         }
+
         bool isHumanPlayer()
         {
             return humanPlayer;
         }
+
         int& getPieceNum()
         {
             return pieceNum;
         }
-        void modifyPieceNum(int i)
-        {
-            pieceNum += i;
-        }
+
         std::vector<std::shared_ptr<Chessman>>& getAllPieces()
         {
             return allPieces;
         }
+
+        /* Funkcja resetuje gracza. Po resecie planszy przypisuje graczowi odpowiednie figury,
+            oraz ustawia ich poprawną liczbę */
         void resetPlayer(std::vector<std::vector<std::shared_ptr<Chessman>>> board)
         {
             pieceNum = 8;
@@ -45,7 +56,7 @@ class Player
                 allPieces[i] = nullptr;
             }
 
-            if (whiteSide == true)
+            if (whiteSide)
             {
                 allPieces[0] = board[0][0];
                 allPieces[1] = board[1][1];
@@ -67,6 +78,9 @@ class Player
                 allPieces[7] = board[7][7];
             }
         }
+
+        /* Funkcja przypisuje nullptr wszystkim figurom gracza. 
+            Funkcja służy do zmieniania przeciwników na planszy */
         void nullPlayer()
         {
             pieceNum = 8;
@@ -77,6 +91,7 @@ class Player
             }
         }
 
+        /* Funkcja sprawdza czy dany gracz może wykonać jakikolwiek ruch */
         bool isMoveImpossible(std::vector<std::vector<std::shared_ptr<Chessman>>>& board)
         {
             Position pos;
@@ -84,7 +99,7 @@ class Player
 
             for(int i = 0; i < 8; i++)
             {
-                if (allPieces[i]->getExistance() == true)
+                if (allPieces[i]->getExistance())
                 {
                     for (int j = 0; j < 32; j++)
                     {

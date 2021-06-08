@@ -11,8 +11,8 @@ link_libraries(stdc++fs)
 
 add_library(game_lib src/pawn.cpp src/queen.cpp src/board.cpp src/position.cpp src/gui.cpp)
 
-add_executable(chess_game
+add_executable(checkers
         src/main.cpp)
-target_link_libraries(chess_game game_lib)
+target_link_libraries(checkers game_lib)
 target_link_libraries(game_lib SDL2::Main SDL2::TTF)
 target_include_directories(game_lib PUBLIC include)

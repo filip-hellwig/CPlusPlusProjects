@@ -1,0 +1,11 @@
+Zaimplementowane przeze mnie warcaby są wariacją warcab rosyjskich.
+
+Reguły gry w warcaby:
+- gracze grają na plaszy 8x8, każdy ma po 8 pionków
+- pionki mogą poruszać się tylko do przodu, bić mogą we wszystkich kierunkach
+- królowe mogą poruszać się we wszystkich kierunkach, o dowolną ilość pól, bić mogą we wszystkich kierunkach
+- królową pionek staje się jak stanie w rzędzie przeciwległym do swojego, lub jeżeli przejdzie przez ten rząd podczas skoku
+- zawsze musi być wykonany maksymalny możliwy skok
+- gracz nie musi wykonywać skoku, może wybrać normalny ruch
+- gra kończy się w momencie straty wszystkich figur przez jednego gracza lub jeżeli gracz nie może już wykonać żadnego ruchu
+

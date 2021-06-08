@@ -3,9 +3,12 @@
 
 #include "player.hpp"
 
+/* Klasa wyspecializowana dla przeciwnika będącego komputerem */
 class Computer : public Player 
 {
     public:
+        /* Konstruktor parametryczny klasy Computer. Przypisuje graczowi kolor, 
+            oraz odpowiednie figury z planszy. */
         Computer(bool isWhiteSide, std::vector<std::vector<std::shared_ptr<Chessman>>> board)
         {
             whiteSide = isWhiteSide;
@@ -16,7 +19,7 @@ class Computer : public Player
                 allPieces.push_back(nullptr);
             }
 
-            if (whiteSide == true)
+            if (whiteSide)
             {
                 allPieces[0] = board[0][0];
                 allPieces[1] = board[1][1];
@@ -39,6 +42,7 @@ class Computer : public Player
             }
         }
 
+        /* Operator porównania dwóch graczy */
         bool operator==(Player p)
         {
             if (whiteSide == p.isWhiteSide())
