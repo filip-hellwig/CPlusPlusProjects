@@ -8,7 +8,6 @@ struct Position
     int row;
 
 
-
     /* Konstruktor bezparametryczny przypisuje obu zmiennym 0 */
     Position();
 
@@ -16,10 +15,10 @@ struct Position
     Position(int newColumn, int newRow);
 
     /* Funkcja zwraca pozycję stworzoną z dwóch zmiennych */
-    Position setPostition(int newColumn, int newRow);
+    Position setPosition(int newColumn, int newRow);
 
     /* Funkcja zwraca wszystkie możliwe pozycje figury na planszy */
-    std::vector<Position> allPostitons();
+    std::vector<Position> allPositions();
 
     /* Przeciążenie operatora porównania */
     bool operator==(Position pos);

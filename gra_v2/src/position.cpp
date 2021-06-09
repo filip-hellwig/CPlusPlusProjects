@@ -12,7 +12,7 @@ Position::Position(int newColumn, int newRow)
     column = newColumn;
 }
 
-Position Position::setPostition(int newColumn, int newRow)
+Position Position::setPosition(int newColumn, int newRow)
 {
     Position temp;
     temp.row = newRow;
@@ -20,7 +20,7 @@ Position Position::setPostition(int newColumn, int newRow)
     return temp;
 }
 
-std::vector<Position> Position::allPostitons()
+std::vector<Position> Position::allPositions()
 {
     std::vector<Position> all;
     Position pos;
@@ -28,14 +28,14 @@ std::vector<Position> Position::allPostitons()
     {
         for(int j = 0; j < 8; j+=2)
         {
-            all.push_back(pos.setPostition(j, i));
+            all.push_back(pos.setPosition(j, i));
         }
     }
     for(int i = 1; i < 8; i+=2)
     {
         for(int j = 1; j < 8; j+=2)
         {
-            all.push_back(pos.setPostition(j, i));
+            all.push_back(pos.setPosition(j, i));
         }
     }
     

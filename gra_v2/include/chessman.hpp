@@ -139,7 +139,7 @@ class Chessman
                     && board[column][row]->getWhite() != white
                     && (board[column2][row2] == nullptr
                     || (board[column2][row2] != nullptr
-                    && pos.setPostition(column2, row2) == position)))
+                    && pos.setPosition(column2, row2) == position)))
                 { return true; }
             }
 
@@ -188,7 +188,7 @@ class Chessman
                     {
                         /* Przypadek bazowy.
                             Sprawdzamy czy doszliśmy na pozycję figury którą ruszamy. */
-                        if (newPosition.setPostition(column2, row2) == position)
+                        if (newPosition.setPosition(column2, row2) == position)
                         {
                             /* Usuwamy przeskoczoną figurę z planszy */
                             board[column][row]->changeExistance(false);
@@ -205,7 +205,7 @@ class Chessman
                         board[column][row] = nullptr;
                         pieceNum += -1;
                         
-                        if(makeJump(newPosition.setPostition(column2, row2), board, flagQueen, pieceNum))
+                        if(makeJump(newPosition.setPosition(column2, row2), board, flagQueen, pieceNum))
                         {
                             /* Jeżeli pionek ma się stać królową */
                             if((row2 == 7 && white)
@@ -271,7 +271,7 @@ class Chessman
                 {   
                     /* Przypadek bazowy.
                         Sprawdzamy czy doszliśmy na pozycję figury którą ruszamy. */
-                    if (newPosition.setPostition(column2, row2) == position)
+                    if (newPosition.setPosition(column2, row2) == position)
                     {
                         return true;
                     }
@@ -282,7 +282,7 @@ class Chessman
                     histPiece = board[column][row];
                     board[column][row] = nullptr;
                     
-                    if(checkJump(newPosition.setPostition(column2, row2), board))
+                    if(checkJump(newPosition.setPosition(column2, row2), board))
                     {
                         /* Przywracamy usuniętą figurę na planszę */
                         board[column][row] = histPiece;
@@ -343,8 +343,8 @@ class Chessman
             { return 24-allPiecesValue(currentTurnAllPieces)+allPiecesValue(opponentAllPieces); }
             
             bool noMoveFlag = true;
-            Position tempBegin, tempEnd;
-            std::vector<Position> vec = begin.allPostitons();
+            std::vector<Position> tempBegin, tempEnd;
+            std::vector<Position> vec = begin.allPositions();
 
             /* Krok podstawowy.
                 Sprawdzamy czy konkretny gracz może wykonać jakikolwiek ruch.
@@ -362,7 +362,6 @@ class Chessman
                                 noMoveFlag = false;
                             }
                         }
-                        
                     }
                 }
                 if(noMoveFlag) { return -10; }
@@ -379,7 +378,6 @@ class Chessman
                                 noMoveFlag = false;
                             }
                         }
-                        
                     }
                 }
                 if(noMoveFlag) { return 50; }
@@ -405,12 +403,22 @@ class Chessman
                                                                     opponentAllPieces, depth, maxingPlayer,
                                                                     begin, end, vec[j]);
                             {
-                                /* -1 oznacza brak możliwości ruchu */
+                                /* -1 oznacza brak możliwości ruchu.
+                                    Jeżeli ruch jest lepszy od poprzednich to czyścimy listę ruchów.
+                                    Jeżeli jest równie dobry to dopisujemy go do listy ruchów */
                                 if (eval < minEval && eval != -1)
                                 {
+                                    tempBegin.clear();
+                                    tempEnd.clear();
+
                                     minEval = eval;
-                                    tempBegin = currentTurnAllPieces[i]->getPosition();
-                                    tempEnd = vec[j];
+                                    tempBegin.push_back(currentTurnAllPieces[i]->getPosition());
+                                    tempEnd.push_back(vec[j]);
+                                }
+                                else if(eval == minEval && eval != -1)
+                                {
+                                    tempBegin.push_back(currentTurnAllPieces[i]->getPosition());
+                                    tempEnd.push_back(vec[j]);
                                 }
                             }
                         }
@@ -418,9 +426,17 @@ class Chessman
                     }
                 }
 
-                /* Przypisujemy oryginałom wyznaczone pozycje */ 
-                begin = tempBegin;
-                end = tempEnd;
+                /* Przypisujemy oryginałom wyznaczone pozycje, które wybieramy
+                    z puli równie wartościowych ruchów */ 
+                if(tempBegin.size() != 0)
+                {
+                    srand (time(NULL)); 
+                    int i;
+                    i = (rand()%tempBegin.size()); 
+                    
+                    begin = tempBegin[i];
+                    end = tempEnd[i];
+                }
 
                 return minEval;
             } else
@@ -441,12 +457,22 @@ class Chessman
                                                                     opponentAllPieces, depth, maxingPlayer,
                                                                     begin, end, vec[j]);
                             {
-                                /* -1 oznacza brak możliwości ruchu */
+                                /* -1 oznacza brak możliwości ruchu.
+                                    Jeżeli ruch jest lepszy od poprzednich to czyścimy listę ruchów.
+                                    Jeżeli jest równie dobry to dopisujemy go do listy ruchów */
                                 if (eval > maxEval && eval != -1)
                                 {
+                                    tempBegin.clear();
+                                    tempEnd.clear();
+
                                     maxEval = eval;
-                                    tempBegin = currentTurnAllPieces[i]->getPosition();
-                                    tempEnd = vec[j];
+                                    tempBegin.push_back(currentTurnAllPieces[i]->getPosition());
+                                    tempEnd.push_back(vec[j]);
+                                }
+                                else if(eval == maxEval && eval != -1)
+                                {
+                                    tempBegin.push_back(currentTurnAllPieces[i]->getPosition());
+                                    tempEnd.push_back(vec[j]);
                                 }
                             }
                         }
@@ -454,9 +480,18 @@ class Chessman
                     }
                 }
 
-                /* Przypisujemy oryginałom wyznaczone pozycje */
-                begin = tempBegin;
-                end = tempEnd;
+                /* Przypisujemy oryginałom wyznaczone pozycje, które wybieramy
+                    z puli równie wartościowych ruchów */
+                if(tempBegin.size() != 0)
+                {
+                    srand (time(NULL)); 
+                    int i;
+                    i = (rand()%tempBegin.size()); 
+                    
+                    begin = tempBegin[i];
+                    end = tempEnd[i];
+                }
+
                 return maxEval;
             }
         }

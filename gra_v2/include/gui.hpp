@@ -38,6 +38,9 @@ class Gui
     /* Funkcja wymazująca wybranie odpowiedniego pola na planszy */
     void unDrawPick(Position& pos, std::vector<std::vector<std::shared_ptr<Chessman>>>& board);
 
+    /* Funkcja rysująca wybranie odpowiedniego przycisku */
+    void drawButton(std::shared_ptr<Player>& opponent);
+
     /* Funkcja przetwarzająca wybór miejsca na planszy.
         Dla odpowienich współrzędnych przypisuje odpowiednią pozycję na planszy. */
     void pickTile(int y, int x, Position& pos);

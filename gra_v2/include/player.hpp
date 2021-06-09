@@ -95,7 +95,7 @@ class Player
         bool isMoveImpossible(std::vector<std::vector<std::shared_ptr<Chessman>>>& board)
         {
             Position pos;
-            std::vector<Position> vec = pos.allPostitons();
+            std::vector<Position> vec = pos.allPositions();
 
             for(int i = 0; i < 8; i++)
             {

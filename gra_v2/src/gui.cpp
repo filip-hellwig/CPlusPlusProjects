@@ -341,6 +341,40 @@ void Gui::unDrawPick(Position& pos, std::vector<std::vector<std::shared_ptr<Ches
     SDL_UpdateWindowSurface(window);
 }
 
+void Gui::drawButton(std::shared_ptr<Player>& opponent)
+{
+    SDL_Color fontColor = {255, 255, 255};
+    SDL_Color fontColor2 = {255, 0, 0};
+
+    if(opponent->isHumanPlayer())
+    {
+        /* Sygnalizujemy że gra AI */
+        SDL_Surface* text4 = TTF_RenderText_Blended(fontSmall, "*", fontColor2);
+        SDL_Rect textRect4 = {960, 228, 300, 36};
+        SDL_BlitSurface(text4, nullptr, surface, &textRect4);
+        SDL_FreeSurface(text4);
+
+        SDL_Surface* text5 = TTF_RenderText_Blended(fontSmall, "*", fontColor);
+        SDL_Rect textRect5 = {960, 328, 300, 36};
+        SDL_BlitSurface(text5, nullptr, surface, &textRect5);
+        SDL_FreeSurface(text5);
+    } else
+    {
+        /* Sygnalizujemy że gra człowiek */
+        SDL_Surface* text4 = TTF_RenderText_Blended(fontSmall, "*", fontColor2);
+        SDL_Rect textRect4 = {960, 328, 300, 36};
+        SDL_BlitSurface(text4, nullptr, surface, &textRect4);
+        SDL_FreeSurface(text4);
+
+        SDL_Surface* text5 = TTF_RenderText_Blended(fontSmall, "*", fontColor);
+        SDL_Rect textRect5 = {960, 228, 300, 36};
+        SDL_BlitSurface(text5, nullptr, surface, &textRect5);
+        SDL_FreeSurface(text5);
+    }
+
+    SDL_UpdateWindowSurface(window);
+}
+
 void Gui::pickTile(int y, int x, Position& pos)
 {
     if (122 <= y && y < 922
@@ -472,6 +506,8 @@ void Gui::mouseButtonDown(SDL_Event& event, Position& begin, Position& end, Boar
                 if(begin == control)
                 {
                     pickButton(event.button.y, event.button.x, begin, end, b, currentTurn, opponent, additional);
+                    drawButton(opponent);
+
                     pickTile(event.button.y, event.button.x, begin);
 
                     /* Sprawdzamy czy begin jest poprawną figurą */
@@ -495,7 +531,11 @@ void Gui::mouseButtonDown(SDL_Event& event, Position& begin, Position& end, Boar
                 else if (end == control)
                 {
                     pickTile(event.button.y, event.button.x, end);
-                    drawPick(end, b.getBoard());
+
+                    if(end != control)
+                    {
+                        drawPick(end, b.getBoard());
+                    }
                 }
 
                 break;
@@ -617,6 +657,7 @@ void Gui::initBoard()
 
     /* Wyświetlamy wszystkie potrzebne przyciski */
     SDL_Color fontColor = {255, 255, 255};
+    SDL_Color fontColor2 = {255, 0, 0};
     SDL_Surface* text = TTF_RenderText_Blended(fontSmall, "New game", fontColor);
     SDL_Rect textRect = {986, 122, 200, 36};
     SDL_BlitSurface(text, nullptr, surface, &textRect);
@@ -631,6 +672,16 @@ void Gui::initBoard()
     SDL_Rect textRect3 = {986, 322, 300, 36};
     SDL_BlitSurface(text3, nullptr, surface, &textRect3);
     SDL_FreeSurface(text3);
+
+    SDL_Surface* text4 = TTF_RenderText_Blended(fontSmall, "*", fontColor2);
+    SDL_Rect textRect4 = {960, 228, 300, 36};
+    SDL_BlitSurface(text4, nullptr, surface, &textRect4);
+    SDL_FreeSurface(text4);
+
+    SDL_Surface* text5 = TTF_RenderText_Blended(fontSmall, "*", fontColor);
+    SDL_Rect textRect5 = {960, 328, 300, 36};
+    SDL_BlitSurface(text5, nullptr, surface, &textRect5);
+    SDL_FreeSurface(text5);
 
     /* Wyświetlamy planszę */
     generateBoard();
